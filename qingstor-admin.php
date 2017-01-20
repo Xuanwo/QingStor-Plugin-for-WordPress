@@ -1,19 +1,6 @@
 <?php
-/**
- * @package QingStor
- * @version 0.1
- */
-/*
-Plugin Name: QingStor
-Plugin URI: http://example.org/
-Description: QingStor plugin for WordPress
-Author: yungkcx
-Version: 0.1
-Author URI: http://yungkcx.github.io
-*/
 
 require_once 'vendor/autoload.php';
-require_once 'qingstor-menu.php';
 
 use QingStor\SDK\Service\QingStor;
 use QingStor\SDK\Config;
@@ -29,8 +16,8 @@ function qingstor_admin() {
     }
     $config = new Config($qingstor['access_key'], $qingstor['secret_key']);
     $service = new QingStor($config);
-
-//    $response = $service->listBuckets();
+/*
+    $response = $service->listBuckets();
     $bucket = $service->Bucket('php-bucket', 'pek3a');
     $response = $bucket->put();
     if ($response->statusCode >= 300 || $response->statusCode < 200) {
@@ -38,6 +25,7 @@ function qingstor_admin() {
     } else {
         echo "Success!<br>";
     }
+ */
 }
 
 add_action('admin_notices', 'qingstor_admin');
