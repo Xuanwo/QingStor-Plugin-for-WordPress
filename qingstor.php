@@ -12,5 +12,6 @@ Version: 0.1
 Author URI: http://yungkcx.github.io
 */
 
+require_once 'vendor/autoload.php';
 require_once 'qingstor-admin.php';
 require_once 'qingstor-menu.php';

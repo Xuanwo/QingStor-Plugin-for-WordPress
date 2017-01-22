@@ -1,32 +1,24 @@
 <?php
 
-require_once 'vendor/autoload.php';
-
 use QingStor\SDK\Service\QingStor;
 use QingStor\SDK\Config;
 
-function qingstor_admin() {
-    global $QINGSTOR_ACCESS_KEY;
-    global $QINGSTOR_SECRET_KEY;
-
-    $qingstor['access_key'] = get_option('access_key');
-    $qingstor['secret_key'] = get_option('secret_key');
-    if ($qingstor['access_key'] == false || $qingstor['secret_key'] == false) {
-        return;
+function qingstor_get_service() {
+    $qingstor_options = get_option('qingstor-options');
+    if ($qingstor_options == false) {
+        return NULL;
     }
-    $config = new Config($qingstor['access_key'], $qingstor['secret_key']);
+    $config = new Config($qingstor_options['access_key'], $qingstor_options['secret_key']);
     $service = new QingStor($config);
-/*
+
     $response = $service->listBuckets();
-    $bucket = $service->Bucket('php-bucket', 'pek3a');
-    $response = $bucket->put();
     if ($response->statusCode >= 300 || $response->statusCode < 200) {
-        echo "<div><p>$response->message</p></div>";
+        return NULL;
     } else {
-        echo "Success!<br>";
+        return $service;
     }
- */
 }
 
 add_action('admin_notices', 'qingstor_admin');
-add_action('admin_menu', 'qingstor_menu');
+function qingstor_admin() {
+}
