@@ -29,13 +29,27 @@ function qingstor_get_service() {
     }
 }
 
-function qingstor_bucket_init() {
-    if (empty($name = get_option('qingstor-options')['bucket_name'])) {
-        return;
-    } else {
-        $bucket = qingstor_get_bucket($name);
-        $bucket->putObject('wp-images/');
-    }
+function qingstor_bucket_init($name, $prefix) {
+    $bucket = qingstor_get_bucket($name);
+    $bucket->putPolicy(    // 设置存储空间策略为所有用户可 Get Objects
+        array(
+            "statement" => array(
+                array(
+                    "id" => "allow all client to get objects",
+                    "user" => "*",
+                    "action" => array("get_object"),
+                    "effect" => "allow",
+                    "resource" => array($name."/*"),
+//                        "condition" => array(
+//                            "string_like" => array(
+//                                "Referer" => array()
+//                            )
+//                        )
+                )
+            )
+        )
+    );
+    $bucket->putObject("Media_files/$prefix".'uploads/');
 }
 
 function qingstor_get_bucket($name) {
