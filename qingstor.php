@@ -12,6 +12,10 @@ Version: 0.1
 Author URI: http://yungkcx.github.io
 */
 
+define('QS_CLIERR', 400);
+define('QS_SRVERR', 500);
+define('QS_OK', 200);
+
 require_once 'vendor/autoload.php';
 require_once 'qingstor-admin.php';
 require_once 'qingstor-menu.php';
