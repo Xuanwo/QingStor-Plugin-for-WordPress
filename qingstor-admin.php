@@ -29,7 +29,7 @@ function qingstor_get_service() {
     }
 }
 
-function qingstor_bucket_init($name, $prefix) {
+function qingstor_bucket_init($name) {
     $bucket = qingstor_get_bucket($name);
     $bucket->putPolicy(    // 设置存储空间策略为所有用户可 Get Objects
         array(
@@ -49,7 +49,9 @@ function qingstor_bucket_init($name, $prefix) {
             )
         )
     );
-    $bucket->putObject("Media_files/$prefix".'uploads/');
+    if (!empty($dir = get_option('qingstor-options')['media_files_dir'])) {
+        $bucket->putObject($dir);
+    }
 }
 
 function qingstor_get_bucket($name) {

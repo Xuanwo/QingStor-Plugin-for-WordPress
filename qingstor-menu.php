@@ -40,6 +40,7 @@ function qingstor_settings_page() {
         }
         if (!empty($_POST['prefix'])) {
             $qingstor_options['prefix'] = $_POST['prefix'];
+            $qingstor_options['media_files_dir'] = 'Media/'.$_POST['prefix'].'uploads/';
         }
         if (!empty($_POST['bucket_name'])) {
             if (!empty(qingstor_get_bucket($_POST['bucket_name']))) {
@@ -105,7 +106,7 @@ function qingstor_settings_page() {
                         </th>
                         <td>
                             <input id="prefix" class="type-text regular-text" name="prefix" type="text">
-                            <p>当前前缀：<?php echo empty($str = get_option('qingstor-options')['prefix']) ? "无" : $str; ?></p>
+                            <p>当前 前缀：<?php echo empty($str = get_option('qingstor-options')['prefix']) ? "无" : $str; ?></p>
                         </td>
                     </tr>
                     </tbody>
