@@ -3,6 +3,8 @@
 use QingStor\SDK\Service\QingStor;
 use QingStor\SDK\Config;
 
+add_action('media_upload_{$tab}');
+
 function qingstor_http_status($res) {
     if ($res->statusCode >= 500) {
         return QS_SRVERR;
@@ -29,37 +31,13 @@ function qingstor_get_service() {
     }
 }
 
-function qingstor_bucket_init($name) {
-    $bucket = qingstor_get_bucket($name);
-    $bucket->putPolicy(    // 设置存储空间策略为所有用户可 Get Objects
-        array(
-            "statement" => array(
-                array(
-                    "id" => "allow all client to get objects",
-                    "user" => "*",
-                    "action" => array("get_object"),
-                    "effect" => "allow",
-                    "resource" => array($name."/*"),
-//                        "condition" => array(
-//                            "string_like" => array(
-//                                "Referer" => array()
-//                            )
-//                        )
-                )
-            )
-        )
-    );
-    if (!empty($dir = get_option('qingstor-options')['media_files_dir'])) {
-        $bucket->putObject($dir);
-    }
-}
-
-function qingstor_get_bucket($name) {
+function qingstor_get_bucket() {
     $service = qingstor_get_service();
     if (empty($service)) {
         return NULL;
     }
-    $bucket = $service->Bucket($name, 'pek3a');
+    $options = get_option('qingstor-options');
+    $bucket = $service->Bucket($options['bucket_name'], 'pek3a');
     $res = $bucket->head();
     if (qingstor_http_status($res) != QS_OK) {
         return NULL;
@@ -74,6 +52,42 @@ function qingstor_test_input($data) {
     return $data;
 }
 
-add_action('admin_notices', 'qingstor_admin');
-function qingstor_admin() {
+// 上传文件
+function qingstor_upload($file) {
+    $wp_upload_dir = wp_get_upload_dir();
+    $file_path = $wp_upload_dir['base_dir'] . '/' . $file;
+    $bucket = qingstor_get_bucket();
+    $media_dir = get_option('qingstor-options')['media_files_dir'];
+    $remote_file_path = $media_dir . $wp_upload_dir['subdir'] . $file;
+
+    if (empty($media_dir)) {
+        return;
+    }
+    if (file_exists($file_path)) {
+        $bucket->putObject(
+            $remote_file_path,
+            array(
+                'body' => file_get_contents($file_path)
+            )
+        );
+    }
+}
+
+add_action('save_post', 'qingstor_save_post');
+function qingstor_save_post($post_id, $post) {
+    global $wpdb;
+
+    if ($post->post_status == 'publish') {
+        // 匹配 <img> <src>
+        $p = '/<img.*[\s]src=[\"|\'](.*)[\"|\'].*>/iU';
+        $num = preg_match_all($p, $post->post_content, $matches);
+
+        if ($num) {
+            // 脚本执行不限制时
+            set_time_limit(0);
+
+            foreach ($matches[1] as $src) {
+            }
+        }
+    }
 }
