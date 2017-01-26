@@ -113,6 +113,7 @@ function qingstor_save_post($post_id, $post) {
 add_filter('the_content', 'qingstor_the_content');
 function qingstor_the_content($content) {
     $qingstor_options = get_option('qingstor-options');
+    $p = '/[<|\[].*[\s](src|mp3)=[\"|\'](.*\.(' . $qingstor_options['upload_type'] . ')).*[\"|\'].*[>|\]]/iU';
     $num = preg_match_all($p, $content, $matches);
 
     if ($num) {
