@@ -45,6 +45,8 @@ function qingstor_settings_page() {
         }
         if (!empty($_POST['bucket_name'])) {
             $options['bucket_name'] = $_POST['bucket_name'];
+            // 设置存储空间策略
+            qingstor_bucket_init();
         }
         update_option('qingstor-options', $options);
     }
@@ -57,7 +59,7 @@ function qingstor_settings_page() {
 function qingstor_upload_setting_page() {
     $options = get_option('qingstor-options');
     if (empty($options['upload_type'])) {
-        $options['upload_type'] = "jpg|jpeg|png|gif|mp3";
+        $options['upload_type'] = "jpg|jpeg|png|gif|mp3|wav|doc|docx|pdf|ppt|pptx|pps|ppsx|xls|xlsx|avi|mp4";
     } else if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         if (!empty($_POST['upload_type'])) {
             $options['upload_type'] = qingstor_test_input($_POST['upload_type']);

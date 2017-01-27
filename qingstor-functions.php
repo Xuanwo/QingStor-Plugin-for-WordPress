@@ -58,6 +58,32 @@ function qingstor_get_bucket() {
     return $bucket;
 }
 
+// 设置 Bucket 的存储空间策略为“允许所有用户读 Media 文件夹”
+function qingstor_bucket_init() {
+    if (!empty($bucket = qingstor_get_bucket())) {
+        $options = get_option('qingstor-options');
+        $bucket->putPolicy(
+            array(
+                "statement" => array(
+                    array(
+                        "id" => "allow all users to get object",
+                        "user" => "*",
+                        "action" => array("get_object"),
+                        "effect" => "allow",
+                        "resource" => array($options['bucket_name'] . '/Media/*'),
+                    )
+                )
+            )
+        );
+    }
+}
+
+/**
+ * 表单输入验证
+ *
+ * @param String $data
+ * @return String string
+ */
 function qingstor_test_input($data) {
     $data = trim($data);
     $data = stripslashes($data);
@@ -90,21 +116,31 @@ function qingstor_upload($filename) {
     }
 }
 
-// 保存文章时，自动上传文章中的本地 Media 文件
+/**
+ * 匹配文章中的 Media 文件
+ *
+ * @param String $data
+ * @return array
+ */
+function qingstor_preg_match_all($data) {
+    $options = get_option('qingstor-options');
+    $p = '/[<|\[].*=[\"|\'](.*\.(' . $options['upload_type'] . ')).*[\"|\'].*[>|\]]/iU';
+    $num = preg_match_all($p, $data, $matches);
+
+    return $num ? $matches[1] : array();
+}
+
+// 发布/更新文章时，自动上传文章中的本地 Media 文件
 add_action('save_post', 'qingstor_save_post', 10, 2);
 function qingstor_save_post($post_id, $post) {
     if ($post->post_status == 'publish') {
-        $qingstor_options = get_option('qingstor-options');
-        $p = '/[<|\[].*[\s](src|mp3)=[\"|\'](.*\.(' . $qingstor_options['upload_type'] . ')).*[\"|\'].*[>|\]]/iU';
-        $num = preg_match_all($p, $post->post_content, $matches);
+        $matches = qingstor_preg_match_all($post->post_content);
 
-        if ($num) {
-            $wp_upload_dir = wp_get_upload_dir();
-            // 脚本执行不限制时
-            set_time_limit(0);
-            foreach ($matches[2] as $src) {
-                qingstor_upload(end(explode($wp_upload_dir['baseurl'], $src)));
-            }
+        $wp_upload_dir = wp_get_upload_dir();
+        // 脚本执行不限制时
+        set_time_limit(0);
+        foreach ($matches as $src) {
+            qingstor_upload(end(explode($wp_upload_dir['baseurl'], $src)));
         }
     }
 }
@@ -112,16 +148,13 @@ function qingstor_save_post($post_id, $post) {
 // 在页面渲染时，替换资源文件路径的域名
 add_filter('the_content', 'qingstor_the_content');
 function qingstor_the_content($content) {
-    $qingstor_options = get_option('qingstor-options');
-    $p = '/[<|\[].*[\s](src|mp3)=[\"|\'](.*\.(' . $qingstor_options['upload_type'] . ')).*[\"|\'].*[>|\]]/iU';
-    $num = preg_match_all($p, $content, $matches);
+    $options = get_option('qingstor-options');
+    $wp_upload_dir = wp_get_upload_dir();
+    $matches = qingstor_preg_match_all($content);
 
-    if ($num) {
-        $wp_upload_dir = wp_get_upload_dir();
-        foreach ($matches[2] as $src) {
-            $bucket_src = 'https://' . $qingstor_options['bucket_name'] . '.pek3a.qingstor.com/' . $qingstor_options['media_files_dir'] . end(explode($wp_upload_dir['baseurl'], $src));
-            $content = str_replace($src, $bucket_src, $content);
-        }
+    foreach ($matches as $src) {
+        $bucket_src = 'https://' . $options['bucket_name'] . '.pek3a.qingstor.com/' . $options['media_files_dir'] . end(explode($wp_upload_dir['baseurl'], $src));
+        $content = str_replace($src, $bucket_src, $content);
     }
     return $content;
 }
