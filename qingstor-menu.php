@@ -66,7 +66,7 @@ function qingstor_upload_setting_page() {
         }
         if (!empty($_POST['prefix'])) {
             $options['prefix'] = qingstor_test_input($_POST['prefix']);
-            $options['media_files_dir'] = 'Media/' . $options['prefix'] . 'uploads';
+            $options['media_dir'] = 'Media/' . $options['prefix'];
         }
         update_option('qingstor-options', $options);
     }
