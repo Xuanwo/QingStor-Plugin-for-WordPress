@@ -3,6 +3,10 @@
 use QingStor\SDK\Service\QingStor;
 use QingStor\SDK\Config;
 
+define('QS_CLIERR', 1);
+define('QS_SRVERR', 2);
+define('QS_OK', 3);
+
 /**
  * 测试 QingStor SDK 返回值
  * @param $response

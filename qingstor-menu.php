@@ -3,36 +3,10 @@
 add_action('admin_menu', 'qingstor_settings_menu');
 function qingstor_settings_menu()
 {
-    add_menu_page(
-        'QingStor',
-        'QingStor',
-        'manage_options',
-        'qingstor'
-    );
-    add_submenu_page(
-        'qingstor',
-        'QingStor',
-        'QingStor 设置',
-        'manage_options',
-        'qingstor',
-        'qingstor_settings_page'
-    );
-    add_submenu_page(
-        'qingstor',
-        '上传设置',
-        '上传设置',
-        'manage_options',
-        'qingstor'.'-upload',
-        'qingstor_upload_setting_page'
-    );
-    add_submenu_page(
-        'qingstor',
-        '备份全站',
-        '备份全站',
-        'manage_options',
-        'qingstor'.'-backup',
-        'qingstor_backup_site_page'
-    );
+    add_menu_page('QingStor', 'QingStor', 'manage_options', 'qingstor');
+    add_submenu_page('qingstor', 'QingStor', 'QingStor 设置', 'manage_options', 'qingstor', 'qingstor_settings_page');
+    add_submenu_page('qingstor', '上传设置', '上传设置', 'manage_options', 'qingstor'.'-upload', 'qingstor_upload_setting_page');
+    add_submenu_page('qingstor', '备份全站', '备份全站', 'manage_options', 'qingstor'.'-backup', 'qingstor_backup_site_page');
 }
 
 function qingstor_settings_page()
