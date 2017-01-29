@@ -1,7 +1,8 @@
 <?php
 
 add_action('admin_menu', 'qingstor_settings_menu');
-function qingstor_settings_menu() {
+function qingstor_settings_menu()
+{
     add_menu_page(
         'QingStor',
         'QingStor',
@@ -34,7 +35,8 @@ function qingstor_settings_menu() {
     );
 }
 
-function qingstor_settings_page() {
+function qingstor_settings_page()
+{
     $options = get_option('qingstor-options');
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         if (!empty($_POST['access_key'])) {
@@ -56,7 +58,8 @@ function qingstor_settings_page() {
     require_once 'qingstor-menu-pages/qingstor-setting-page.php';
 }
 
-function qingstor_upload_setting_page() {
+function qingstor_upload_setting_page()
+{
     $options = get_option('qingstor-options');
     if (empty($options['upload_type'])) {
         $options['upload_type'] = "jpg|jpeg|png|gif|mp3|doc|pdf|ppt|pps";
@@ -66,7 +69,8 @@ function qingstor_upload_setting_page() {
         }
         if (!empty($_POST['prefix'])) {
             $options['prefix'] = qingstor_test_input($_POST['prefix']);
-            $options['media_dir'] = 'Media/' . $options['prefix'];
+            $options['media_dir'] = 'Media/' . $options['prefix'] . 'Uploads';
+            $options['backup_dir'] = 'Website_Backup' . $options['prefix'] . 'Website';
         }
     }
     update_option('qingstor-options', $options);
@@ -75,6 +79,7 @@ function qingstor_upload_setting_page() {
     require_once 'qingstor-menu-pages/qingstor-upload-setting-page.php';
 }
 
-function qingstor_backup_site_page() {
+function qingstor_backup_site_page()
+{
     require_once 'qingstor-menu-pages/qingstor-backup-site-page.php';
 }
