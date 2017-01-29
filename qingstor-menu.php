@@ -48,8 +48,8 @@ function qingstor_settings_page() {
             // 设置存储空间策略
             qingstor_bucket_init();
         }
-        update_option('qingstor-options', $options);
     }
+    update_option('qingstor-options', $options);
     $qingstor_access = $options['access_key'];
     $qingstor_secret = $options['secret_key'];
     $qingstor_bucket = $options['bucket_name'];
@@ -59,7 +59,7 @@ function qingstor_settings_page() {
 function qingstor_upload_setting_page() {
     $options = get_option('qingstor-options');
     if (empty($options['upload_type'])) {
-        $options['upload_type'] = "jpg|jpeg|png|gif|mp3|wav|doc|docx|pdf|ppt|pptx|pps|ppsx|xls|xlsx|avi|mp4";
+        $options['upload_type'] = "jpg|jpeg|png|gif|mp3|doc|pdf|ppt|pps";
     } else if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         if (!empty($_POST['upload_type'])) {
             $options['upload_type'] = qingstor_test_input($_POST['upload_type']);
@@ -68,8 +68,8 @@ function qingstor_upload_setting_page() {
             $options['prefix'] = qingstor_test_input($_POST['prefix']);
             $options['media_dir'] = 'Media/' . $options['prefix'];
         }
-        update_option('qingstor-options', $options);
     }
+    update_option('qingstor-options', $options);
     $qingstor_upload_type = $options['upload_type'];
     $qingstor_prefix = $options['prefix'];
     require_once 'qingstor-menu-pages/qingstor-upload-setting-page.php';
