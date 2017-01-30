@@ -13,13 +13,13 @@ function qingstor_settings_page()
 {
     $options = get_option('qingstor-options');
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-        if (!empty($_POST['access_key'])) {
+        if (! empty($_POST['access_key'])) {
             $options['access_key'] = qingstor_test_input($_POST['access_key']);
         }
-        if (!empty($_POST['secret_key'])) {
+        if (! empty($_POST['secret_key'])) {
             $options['secret_key'] = qingstor_test_input($_POST['secret_key']);
         }
-        if (!empty($_POST['bucket_name'])) {
+        if (! empty($_POST['bucket_name'])) {
             $options['bucket_name'] = $_POST['bucket_name'];
             // 设置存储空间策略
             qingstor_bucket_init();
@@ -37,11 +37,12 @@ function qingstor_upload_setting_page()
     $options = get_option('qingstor-options');
     if (empty($options['upload_types'])) {
         $options['upload_types'] = "jpg|jpeg|png|gif|mp3|doc|pdf|ppt|pps";
-    } else if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-        if (!empty($_POST['upload_types'])) {
+    }
+    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+        if (! empty($_POST['upload_types'])) {
             $options['upload_types'] = qingstor_test_input($_POST['upload_types']);
         }
-        if (!empty($_POST['prefix'])) {
+        if (! empty($_POST['prefix'])) {
             $options['prefix'] = qingstor_test_input($_POST['prefix']);
             $options['media_dir'] = 'Media/' . $options['prefix'] . 'Uploads';
             $options['website_dir'] = 'Website_Backup/' . $options['prefix'] . 'Websites';
@@ -55,5 +56,14 @@ function qingstor_upload_setting_page()
 
 function qingstor_backup_site_page()
 {
+    $options = get_option('qingstor-options');
+    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+        if ($_POST['backup']) {
+            // 一秒后触发的单次任务，用于立即备份
+            wp_schedule_single_event(time() + 1, 'qingstor_schedule_hook');
+        } else if ($_POST['schedule']) {
+            echo 'schedule';
+        }
+    }
     require_once 'qingstor-menu-pages/qingstor-backup-site-page.php';
 }

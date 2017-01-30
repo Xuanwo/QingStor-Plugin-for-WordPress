@@ -9,9 +9,6 @@
                     <p>
                         <strong>设置已保存。</strong>
                     </p>
-                    <button class="notice-dismiss" type="button">
-                        <span class="screen-reader-text">忽略此通知。</span>
-                    </button>
                 </div>
                 <?php
             }
