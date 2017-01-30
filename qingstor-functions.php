@@ -95,9 +95,3 @@ function qingstor_test_input($data)
     $data = htmlspecialchars($data);
     return $data;
 }
-
-// 支持中文的 basename() 函数
-function qingstor_basename($path)
-{
-    return preg_replace('/^.+[\\\\\\/]/', '', $path);
-}

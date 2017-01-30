@@ -59,7 +59,7 @@ final class QingStorUpload
     public function preg_match_all($data)
     {
         $options = get_option('qingstor-options');
-        $p = '/=[\"|\'](https?:\/\/[^\s]*\.(' . $options['upload_type'] . '))[\"|\'| ]/iU';
+        $p = '/=[\"|\'](https?:\/\/[^\s]*\.(' . $options['upload_types'] . '))[\"|\'| ]/iU';
         $num = preg_match_all($p, $data, $matches);
 
         return $num ? $matches[1] : array();
@@ -86,7 +86,7 @@ final class QingStorUpload
     {
         $wp_upload_dir = wp_get_upload_dir();
         $attach_url = wp_get_attachment_url($post_ID);
-        $file_path = $wp_upload_dir['path'] . '/' . qingstor_basename($attach_url);
+        $file_path = $wp_upload_dir['path'] . '/' . wp_basename($attach_url);
         $file_type = wp_check_filetype($file_path);
 
         if (strstr($file_type['type'], 'image') == false) {

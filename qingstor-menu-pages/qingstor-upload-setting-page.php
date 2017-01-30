@@ -23,7 +23,7 @@
                         <label for="upload">文件类型</label>
                     </th>
                     <td>
-                        <input id="upload" class="type-text regular-text" type="text" name="upload_type" value="<?php echo $qingstor_upload_type; ?>">
+                        <input id="upload" class="type-text regular-text" type="text" name="upload_types" value="<?php echo $qingstor_upload_types; ?>">
                         <p class="describe">要上传的文件后缀。</p>
                     </td>
                 </tr>
