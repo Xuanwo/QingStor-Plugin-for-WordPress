@@ -20,6 +20,7 @@ final class QingStorBackup
     }
 
     public function scheduled_backup($recurrence) {
+        wp_clear_scheduled_hook('qingstor_scheduled_bakcup_hook');
         if ($recurrence['schedule_type'] === 'manually') {
             return;
         }
@@ -46,7 +47,6 @@ final class QingStorBackup
                 return;
         }
         $timestamp = strtotime($time_str) - ($time_str === 'now' ? 0 : get_option('gmt_offset') * HOUR_IN_SECONDS);
-        wp_clear_scheduled_hook('qingstor_scheduled_bakcup_hook');
         wp_schedule_event($timestamp, $recurrence['schedule_type'], 'qingstor_scheduled_backup_hook');
     }
 
