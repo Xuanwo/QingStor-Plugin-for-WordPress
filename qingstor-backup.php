@@ -20,7 +20,7 @@ final class QingStorBackup
     }
 
     public function scheduled_backup($recurrence) {
-        wp_clear_scheduled_hook('qingstor_scheduled_bakcup_hook');
+        $this->clear_schedule();
         if ($recurrence['schedule_type'] === 'manually') {
             return;
         }
@@ -48,6 +48,10 @@ final class QingStorBackup
         }
         $timestamp = strtotime($time_str) - ($time_str === 'now' ? 0 : get_option('gmt_offset') * HOUR_IN_SECONDS);
         wp_schedule_event($timestamp, $recurrence['schedule_type'], 'qingstor_scheduled_backup_hook');
+    }
+
+    public function clear_schedule() {
+        wp_clear_scheduled_hook('qingstor_scheduled_bakcup_hook');
     }
 
     // 一秒后触发的单次任务，用于立即备份

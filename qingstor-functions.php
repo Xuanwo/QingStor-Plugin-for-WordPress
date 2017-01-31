@@ -95,3 +95,8 @@ function qingstor_test_input($data)
     $data = htmlspecialchars($data);
     return $data;
 }
+
+function qingstor_deactivation() {
+    QingStorBackup::get_instance()->clear_schedule();
+    delete_option('qingstor-options');
+}

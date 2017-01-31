@@ -87,14 +87,14 @@
                         <p class="description">24 小时制。</p>
                     </td>
                 </tr>
-                <tr>
-                    <th scope="row">
-                        <label for="backup_num">保存备份的最大数量</label>
-                    </th>
-                    <td>
-                        <input type="number" min="1" step="1" id="backup_num" value="10" name="backup_num">
-                    </td>
-                </tr>
+<!--                <tr>-->
+<!--                    <th scope="row">-->
+<!--                        <label for="backup_num">保存备份的最大数量</label>-->
+<!--                    </th>-->
+<!--                    <td>-->
+<!--                        <input type="number" min="1" step="1" id="backup_num" value="10" name="backup_num">-->
+<!--                    </td>-->
+<!--                </tr>-->
 <!--                <tr>-->
 <!--                    <th scope="row">-->
 <!--                        <input type="checkbox" id="sendmail" name="sendmail" value="okokok">-->

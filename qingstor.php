@@ -14,3 +14,5 @@ require_once 'qingstor-functions.php';
 require_once 'qingstor-upload.php';
 require_once 'qingstor-menu.php';
 require_once 'qingstor-backup.php';
+
+register_deactivation_hook(__FILE__, 'qingstor_deactivation');
