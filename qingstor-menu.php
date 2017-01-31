@@ -60,11 +60,11 @@ function qingstor_backup_site_page()
         if ($_POST['backup']) {
             QingStorBackup::get_instance()->once_bakcup();
         } else if ($_POST['schedule']) {
-            if (! empty($_POST['backup_num'])) {
-                $options = get_option('qingstor-options');
-                $options['backup_num'] = $_POST['backup_num'];
-                update_option('qingstor-options', $options);
-            }
+//            if (! empty($_POST['backup_num'])) {
+//                $options = get_option('qingstor-options');
+//                $options['backup_num'] = $_POST['backup_num'];
+//                update_option('qingstor-options', $options);
+//            }
             QingStorBackup::get_instance()->scheduled_backup($_POST['schedule_recurrence']);
         }
     }

@@ -84,7 +84,7 @@
                                 Minutes
                             </label>
                         </span>
-                        <p class="description">24 小时制。</p>
+                        <p class="description">24 小时制。记得检查 WordPress 常规设置里的时区。</p>
                     </td>
                 </tr>
 <!--                <tr>-->
