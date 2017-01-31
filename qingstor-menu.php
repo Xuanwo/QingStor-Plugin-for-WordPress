@@ -56,13 +56,16 @@ function qingstor_upload_setting_page()
 
 function qingstor_backup_site_page()
 {
-    $options = get_option('qingstor-options');
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         if ($_POST['backup']) {
-            // 一秒后触发的单次任务，用于立即备份
-            wp_schedule_single_event(time() + 1, 'qingstor_schedule_hook');
+            QingStorBackup::get_instance()->once_bakcup();
         } else if ($_POST['schedule']) {
-            echo 'schedule';
+            if (! empty($_POST['backup_num'])) {
+                $options = get_option('qingstor-options');
+                $options['backup_num'] = $_POST['backup_num'];
+                update_option('qingstor-options', $options);
+            }
+            QingStorBackup::get_instance()->scheduled_backup($_POST['schedule_recurrence']);
         }
     }
     require_once 'qingstor-menu-pages/qingstor-backup-site-page.php';

@@ -6,7 +6,9 @@ final class QingStorBackup
 
     public function __construct()
     {
-        add_action('qingstor_schedule_hook', array($this, 'backup'));
+        add_action('qingstor_scheduled_backup_hook', array($this, 'backup'));
+        add_action('qingstor_once_backup_hook', array($this, 'backup'));
+        add_filter('cron_schedules', array($this, 'more_reccurences'));
     }
 
     public static function get_instance()
@@ -17,17 +19,54 @@ final class QingStorBackup
         return self::$instance;
     }
 
+    public function scheduled_backup($recurrence) {
+        if ($recurrence['schedule_type'] === 'manually') {
+            return;
+        }
+        if (! key_exists($recurrence['schedule_type'], wp_get_schedules())) {
+            return;
+        }
+
+        switch ($recurrence['schedule_type']) {
+            case 'monthly':
+                $time_str = $recurrence['start_day_of_month'] . ' ' . $recurrence['start_hours'] . ':' . $recurrence['start_minutes'];
+                break;
+            case 'weekly':
+            case 'fortnightly':
+                $time_str = $recurrence['start_day_of_week'] . ' ' . $recurrence['start_hours'] . ':' . $recurrence['start_minutes'];
+                break;
+            case 'daily':
+            case 'twicedaily':
+                $time_str = $recurrence['start_hours'] . ':' . $recurrence['start_minutes'];
+                break;
+            case 'hourly':
+                $time_str = 'now';
+                break;
+            default:
+                return;
+        }
+        $timestamp = strtotime($time_str) - ($time_str === 'now' ? 0 : get_option('gmt_offset') * HOUR_IN_SECONDS);
+        wp_clear_scheduled_hook('qingstor_scheduled_bakcup_hook');
+        wp_schedule_event($timestamp, $recurrence['schedule_type'], 'qingstor_scheduled_backup_hook');
+    }
+
+    // 一秒后触发的单次任务，用于立即备份
+    public function once_bakcup() {
+        wp_schedule_single_event(time() + 1, 'qingstor_once_backup_hook');
+    }
+
     // 导出数据库，压缩 WordPress 目录和至临时文件夹，备份至 QingStor Bucket，然后删除临时目录
-    public static function backup()
+    public function backup()
     {
-        if (! self::is_backup_possible()) {
+        if (! $this->is_backup_possible()) {
             return;
         }
         if (empty($bucket = qingstor_get_bucket())) {
             return;
         }
         $options = get_option('qingstor-options');
-        $backup_path = self::get_backup_path();
+        $backup_path = $this->get_backup_path();
+
 
         // 使用 zip 备份 WordPress 目录(ABSPATH)
         $cwd = getcwd();
@@ -36,7 +75,7 @@ final class QingStorBackup
         exec($command, $output, $retvar1);
         // 使用 mysqldump 备份数据库
         unset($output);
-        $mysql_connect_args = self::get_mysql_connect_args();
+        $mysql_connect_args = $this->get_mysql_connect_args();
         $command = 'mysqldump ' . $mysql_connect_args . ' > ' . $backup_path['database_path'];
         exec($command, $output, $retvar2);
         // 添加 mysql 备份到 zip 文件中
@@ -53,8 +92,17 @@ final class QingStorBackup
         }
         // 删除临时目录及文件
         if (file_exists($backup_path['backup_dir'])) {
-            self::deldir($backup_path['backup_dir']);
+            $this->deldir($backup_path['backup_dir']);
         }
+    }
+
+    // 钩子函数，添加一些定时任务用到的频率
+    function more_reccurences() {
+        return array(
+            'weekly' => array('interval' => 604800, 'display' => 'Once Weekly'),
+            'fortnightly' => array('interval' => 1209600, 'display' => 'Once Every Two Weeks'),
+            'monthly' => Array ( 'interval' => 2592000, 'display' => 'Once Monthly')
+        );
     }
 
     // 获取 mysqldump 所必须的参数，包括用户名，密码和 wordpress 数据库名
@@ -105,9 +153,10 @@ final class QingStorBackup
         $options = get_option('qingstor-options');
         $backup_dir = $options['backup_dir'];
         if (! isset($backup_dir) || ! file_exists($backup_dir)) {
-            $rand_suffix = $this->generate_rand_string();
             $wp_content_dir = defined(WP_CONTENT_DIR) ? WP_CONTENT_DIR : ABSPATH . 'wp-content';
-            $options['backup_dir'] = $backup_dir =  "$wp_content_dir/QingStor-Backup-$rand_suffix";
+            $rand_suffix = $this->generate_rand_string();
+            $backup_dir =  "$wp_content_dir/QingStor-Backup-$rand_suffix";
+            $options['backup_dir'] = $backup_dir;
             mkdir($backup_dir);
             chmod($backup_dir, 0777);
             update_option('qingstor-options', $options);
@@ -119,7 +168,7 @@ final class QingStorBackup
 
     public function schedule_hook_run()
     {
-        self::backup();
+        $this->backup();
     }
 
     public function zip_cmd_test()

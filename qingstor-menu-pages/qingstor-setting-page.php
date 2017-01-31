@@ -38,7 +38,7 @@
                     </th>
                     <td>
                         <input id="bucket" class="type-text regular-text" name="bucket_name" type="text" value="<?php echo $qingstor_bucket; ?>">
-                        <p class="describe"><strong>注意：该 Bucket 应该仅用于 WordPress，请尽可能确保 Bucket 为空，否则可能丢失数据。</strong></p>
+                        <p class="description"><strong>注意：该 Bucket 应该仅用于 WordPress，请尽可能确保 Bucket 为空，否则可能丢失数据。</strong></p>
                     </td>
                 </tr>
                 </tbody>

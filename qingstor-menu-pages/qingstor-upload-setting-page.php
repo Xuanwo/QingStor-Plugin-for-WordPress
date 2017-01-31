@@ -21,7 +21,7 @@
                     </th>
                     <td>
                         <input id="upload" class="type-text regular-text" type="text" name="upload_types" value="<?php echo $qingstor_upload_types; ?>">
-                        <p class="describe">要上传的文件后缀。</p>
+                        <p class="description">要上传的文件后缀。</p>
                     </td>
                 </tr>
                 <tr>
