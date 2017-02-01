@@ -9,6 +9,7 @@ final class QingStorUpload
         add_action('add_attachment', array($this, 'add_attachment'));
         add_filter('the_content', array($this, 'the_content'));
         add_filter('wp_calculate_image_srcset', array($this, 'calculate_image_srcset'));
+        add_action('qingstor_scheduled_upload_hook', array($this, 'upload_file'));
     }
 
     public static function get_instance()
@@ -31,7 +32,11 @@ final class QingStorUpload
 
         foreach ($local_remote_path as $local_path => $remote_path) {
             if (file_exists($local_path)) {
-                $bucket->putObject($remote_path, array('body' => file_get_contents($local_path)));
+                // 如果小于 5GB 直接上传，否则使用 分段上传，不支持 50TB 以上的文件
+                if (($size = filesize($local_path)) < 1024*1024*1024*5) {
+                    $bucket->putObject($remote_path, array('body' => file_get_contents($local_path)));
+                } elseif ($size < 1024*1024*1024*1024*50) {
+                }
             }
         }
     }
@@ -61,6 +66,7 @@ final class QingStorUpload
                 $media_dir . '/' . substr($data['file'], 0, 8) . $thumb_data['file'];
             }
         }
+        wp_schedule_single_event(time() + 1, 'qingstor_scheduled_upload_hook', array($files));
     }
 
     /**

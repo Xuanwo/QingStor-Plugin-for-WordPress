@@ -1,5 +1,0 @@
-{
-    "require": {
-        "yunify/qingstor-sdk": "^2.1"
-    }
-}
