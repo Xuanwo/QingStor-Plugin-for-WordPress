@@ -16,7 +16,7 @@ function qingstor_http_status($response)
 {
     if ($response->statusCode >= 500) {
         return QS_SRVERR;
-    } else if ($response->statusCode >= 400) {
+    } elseif ($response->statusCode >= 400) {
         return QS_CLIERR;
     } else {
         return QS_OK;
@@ -96,7 +96,15 @@ function qingstor_test_input($data)
     return $data;
 }
 
-function qingstor_deactivation() {
+function qingstor_activation()
+{
+    $options = array();
+    $options['upload_types'] = 'jpg|jpeg|png|gif|mp3|doc|pdf|ppt|pps';
+    update_option('qingstor-options', $options);
+}
+
+function qingstor_deactivation()
+{
     QingStorBackup::get_instance()->clear_schedule();
     delete_option('qingstor-options');
 }

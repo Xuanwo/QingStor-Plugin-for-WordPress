@@ -93,6 +93,8 @@ final class QingStorBackup
         if (! $retvar1 && ! $retvar2 && ! $retvar3) {
             $bucket_zip_path = $options['website_dir'] . '/' . wp_basename($backup_path['zip_path']);
             $bucket->putObject($bucket_zip_path, array('body' => file_get_contents($backup_path['zip_path'])));
+            // 上传成功后，发送邮件通知
+            $this->send_mail($bucket_zip_path);
         }
         // 删除临时目录及文件
         if (file_exists($backup_path['backup_dir'])) {
@@ -212,6 +214,16 @@ final class QingStorBackup
             return false;
         }
         return true;
+    }
+
+    public function send_mail($filename) {
+        if (! ($to = get_option('qingstor-options')['mailaddr'])) {
+            return;
+        }
+
+        $message = 'QingStor backup ' . $filename . ' at ' . date('Y/m/d H:i', current_time('timestamp'));
+        $headers = 'Form: wordpress@' . preg_replace('#^www\.#', '', strtolower($_SERVER['SERVER_NAME'])) . "\n";
+        @wp_mail($to, get_bloginfo('name') . ' ' . __('WordPress backup', 'QingStor-backup'), $message, $headers);
     }
 }
 

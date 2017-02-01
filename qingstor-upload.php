@@ -6,9 +6,9 @@ final class QingStorUpload
 
     public function __construct()
     {
-        add_filter('wp_calculate_image_srcset', array($this, 'calculate_image_srcset'));
         add_action('add_attachment', array($this, 'add_attachment'));
         add_filter('the_content', array($this, 'the_content'));
+        add_filter('wp_calculate_image_srcset', array($this, 'calculate_image_srcset'));
     }
 
     public static function get_instance()
@@ -20,10 +20,27 @@ final class QingStorUpload
     }
 
     /**
-     * 上传指定 Media 文件
-     * @param $data
+     * 上传单个文件
+     * @param        $bucket
+     * @param array $local_remote_path "本地绝对路径 => Bucket 绝对路径" 形式的数组
      */
-    public function upload($data)
+    public function upload_file($local_remote_path) {
+        if (empty($bucket = qingstor_get_bucket())) {
+            return;
+        }
+
+        foreach ($local_remote_path as $local_path => $remote_path) {
+            if (file_exists($local_path)) {
+                $bucket->putObject($remote_path, array('body' => file_get_contents($local_path)));
+            }
+        }
+    }
+
+    /**
+     * 上传指定 Media 文件
+     * @param array $data 有 'file' 键的关联数组
+     */
+    public function upload_data($data)
     {
         $wp_upload_dir = wp_get_upload_dir();
         $bucket = qingstor_get_bucket();
@@ -32,21 +49,16 @@ final class QingStorUpload
         if (empty($media_dir) || empty($bucket)) {
             return;
         }
-        // 上传原图|上传文件
-        $file_path = $wp_upload_dir['basedir'] . '/' . $data['file'];
-        if (file_exists($file_path)) {
-            $remote_file_path = $media_dir . '/' . $data['file'];
-            $bucket->putObject($remote_file_path, array('body' => file_get_contents($file_path)));
-        }
-        // 上传缩略图
+
+        $files = array();
+        // 原图|上传文件
+        $files[$wp_upload_dir['basedir'] . '/' . $data['file']] = $media_dir . '/' . $data['file'];
+
+        // 缩略图
         if (isset($data['sizes']) && count($data['sizes']) > 0) {
             foreach ($data['sizes'] as $key => $thumb_data) {
-                $thumb_path = $wp_upload_dir['basedir'] . '/' . substr($data['file'], 0, 8) . $thumb_data['file'];
-                $remote_thumb_path = $media_dir . '/' . substr($data['file'], 0, 8) . $thumb_data['file'];
-
-                if (file_exists($thumb_path)) {
-                    $bucket->putObject($remote_thumb_path, array('body' => file_get_contents($thumb_path)));
-                }
+                $files[$wp_upload_dir['basedir'] . '/' . substr($data['file'], 0, 8) . $thumb_data['file']] =
+                $media_dir . '/' . substr($data['file'], 0, 8) . $thumb_data['file'];
             }
         }
     }
@@ -95,12 +107,16 @@ final class QingStorUpload
         } else {
             $data = wp_generate_attachment_metadata($post_ID, $file_path);
         }
-        $this->upload($data);
+        $this->upload_data($data);
     }
+
 
     // 钩子函数，在页面渲染时，替换资源文件路径的域名
     public function the_content($content)
     {
+        if (! get_option('qingstor-options')['replace_url']) {
+            return $content;
+        }
         $matches = $this->preg_match_all($content);
 
         foreach ($matches as $url) {
@@ -113,6 +129,9 @@ final class QingStorUpload
     //钩子函数，设置 srcset，防止一些 QingStor Bucket 的图片无法在文章中显示
     public function calculate_image_srcset($src)
     {
+        if (! get_option('qingstor-options')['replace_url']) {
+            return $src;
+        }
         $wp_upload_dir = wp_get_upload_dir();
 
         foreach ($src as $key => &$value) {

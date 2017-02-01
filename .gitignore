@@ -2,4 +2,8 @@
 
 # PhpStorm
 .idea
-log.php
+
+# composer
+vendor
+composer.json
+composer.lock

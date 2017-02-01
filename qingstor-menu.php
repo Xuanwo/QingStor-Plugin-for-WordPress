@@ -3,10 +3,7 @@
 add_action('admin_menu', 'qingstor_settings_menu');
 function qingstor_settings_menu()
 {
-    add_menu_page('QingStor', 'QingStor', 'manage_options', 'qingstor');
-    add_submenu_page('qingstor', 'QingStor', 'QingStor 设置', 'manage_options', 'qingstor', 'qingstor_settings_page');
-    add_submenu_page('qingstor', '上传设置', '上传设置', 'manage_options', 'qingstor'.'-upload', 'qingstor_upload_setting_page');
-    add_submenu_page('qingstor', '备份全站', '备份全站', 'manage_options', 'qingstor'.'-backup', 'qingstor_backup_site_page');
+    add_options_page('QingStor', 'QingStor', 'manage_options', 'qingstor', 'qingstor_settings_page');
 }
 
 function qingstor_settings_page()
@@ -20,25 +17,12 @@ function qingstor_settings_page()
             $options['secret_key'] = qingstor_test_input($_POST['secret_key']);
         }
         if (! empty($_POST['bucket_name'])) {
-            $options['bucket_name'] = $_POST['bucket_name'];
-            // 设置存储空间策略
-            qingstor_bucket_init();
+            $options['bucket_name'] = qingstor_test_input($_POST['bucket_name']);
+            // 设置 Bucket 存储空间策略
+            if ($options['bucket_name'] != $_POST['bucket_name']) {
+                qingstor_bucket_init();
+            }
         }
-    }
-    update_option('qingstor-options', $options);
-    $qingstor_access = $options['access_key'];
-    $qingstor_secret = $options['secret_key'];
-    $qingstor_bucket = $options['bucket_name'];
-    require_once 'qingstor-menu-pages/qingstor-setting-page.php';
-}
-
-function qingstor_upload_setting_page()
-{
-    $options = get_option('qingstor-options');
-    if (empty($options['upload_types'])) {
-        $options['upload_types'] = "jpg|jpeg|png|gif|mp3|doc|pdf|ppt|pps";
-    }
-    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         if (! empty($_POST['upload_types'])) {
             $options['upload_types'] = qingstor_test_input($_POST['upload_types']);
         }
@@ -47,26 +31,38 @@ function qingstor_upload_setting_page()
             $options['media_dir'] = 'Media/' . $options['prefix'] . 'Uploads';
             $options['website_dir'] = 'Website_Backup/' . $options['prefix'] . 'Websites';
         }
+        if ($_POST['replace_url']) {
+            $options['replace_url'] = true;
+        } else {
+            $options['replace_url'] = false;
+        }
+        if (! empty($_POST['backup_num'])) {
+            $options['backup_num'] = $_POST['backup_num'];
+        }
+        if ($_POST['sendmail']) {
+            $options['sendmail'] = true;
+        } else {
+            $options['sendmail'] = false;
+        }
+        if (! empty($_POST['mailaddr'])) {
+            $options['mailaddr'] = qingstor_test_input($_POST['mailaddr']);
+        }
+        $options['schedule_recurrence'] = $_POST['schedule_recurrence'];
+        QingStorBackup::get_instance()->scheduled_backup($_POST['schedule_recurrence']);
+    } elseif ($_GET['once_backup']) {
+        QingStorBackup::get_instance()->once_bakcup();
     }
     update_option('qingstor-options', $options);
-    $qingstor_upload_types = $options['upload_types'];
-    $qingstor_prefix = $options['prefix'];
-    require_once 'qingstor-menu-pages/qingstor-upload-setting-page.php';
-}
 
-function qingstor_backup_site_page()
-{
-    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-        if ($_POST['backup']) {
-            QingStorBackup::get_instance()->once_bakcup();
-        } else if ($_POST['schedule']) {
-//            if (! empty($_POST['backup_num'])) {
-//                $options = get_option('qingstor-options');
-//                $options['backup_num'] = $_POST['backup_num'];
-//                update_option('qingstor-options', $options);
-//            }
-            QingStorBackup::get_instance()->scheduled_backup($_POST['schedule_recurrence']);
-        }
-    }
-    require_once 'qingstor-menu-pages/qingstor-backup-site-page.php';
+    $qingstor_upload_types = $options['upload_types'];
+    $qingstor_prefix       = $options['prefix'];
+    $qingstor_mail         = $options['mailaddr'];
+    $qingstor_nbackup      = $options['backup_num'];
+    $qingstor_recurrence   = $options['schedule_recurrence'];
+    $qingstor_access       = $options['access_key'];
+    $qingstor_secret       = $options['secret_key'];
+    $qingstor_bucket       = $options['bucket_name'];
+    $qingstor_replace_url  = $options['replace_url'];
+
+    require_once 'qingstor-setting-page.php';
 }
