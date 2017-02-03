@@ -16,7 +16,7 @@ QingStor 青云对象存储服务 WordPress 插件，支持定时备份，自动
 (1)向媒体库上传文件时，会自动上传到设置好的 QingStor Bucket
 (2)开启 `自动替换资源文件 URL`，插件会在文章渲染时自动替换资源文件的 URL 为 Bucket 地址
 (3)定时备份的邮件通知依赖 PHP email 的相关设置
-(4)备份功能需要安装有 zip 和 mysqldump 程序，可分别在终端使用 `zip --version` 和 `mysqldump --version` 命令检查。
+(4)备份功能需要安装有 zip 和 mysqldump 程序，可分别在终端使用 `zip --version` 和 `mysqldump --version` 命令检查
 
 == Installation ==
 
