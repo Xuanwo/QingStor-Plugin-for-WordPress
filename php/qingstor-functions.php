@@ -105,13 +105,6 @@ function qingstor_test_input($data)
     return $data;
 }
 
-// 添加文本域
-add_action('init', 'qingstor_load_textdomain');
-function qingstor_load_textdomain()
-{
-    load_plugin_textdomain('qingstor', false, dirname(plugin_basename(__FILE__)));
-}
-
 function qingstor_activation()
 {
     $options = array(

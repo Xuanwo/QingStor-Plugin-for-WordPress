@@ -63,6 +63,7 @@ final class QingStorBackup
     // 导出数据库，压缩 WordPress 目录和至临时文件夹，备份至 QingStor Bucket，然后删除临时目录
     public function backup()
     {
+        set_time_limit(0);
         if (! $this->is_backup_possible()) {
             return;
         }
@@ -88,6 +89,8 @@ final class QingStorBackup
 
         // 确保三个备份命令都成功（返回 0）时，上传到 QingStor Bucket
         if (! $retvar1 && ! $retvar2 && ! $retvar3) {
+            $this->check_backups_num();
+
             $bucket_zip_path = $options['backup_prefix'] . wp_basename($backup_path['zip_path']);
             $files[$backup_path['zip_path']] = $bucket_zip_path;
             QingStorUpload::get_instance()->upload_files($files);
@@ -97,6 +100,13 @@ final class QingStorBackup
         // 删除临时目录及文件
         if (file_exists($backup_path['backup_dir'])) {
             $this->deldir($backup_path['backup_dir']);
+        }
+    }
+
+    // 检查备份文件的数量，如果超过设置的最大数量，则删除最早的部分
+    public function check_backups_num() {
+        if (empty($bucket = qingstor_get_bucket())) {
+            return;
         }
     }
 

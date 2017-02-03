@@ -17,3 +17,10 @@ require_once 'php/qingstor-backup.php';
 
 register_activation_hook(__FILE__, 'qingstor_activation');
 register_deactivation_hook(__FILE__, 'qingstor_deactivation');
+
+// 添加文本域
+add_action('init', 'qingstor_load_textdomain');
+function qingstor_load_textdomain()
+{
+    load_plugin_textdomain('qingstor', false, dirname(plugin_basename(__FILE__)) . '/languages/');
+}

@@ -62,6 +62,7 @@ final class QingStorUpload
         define('MB', 1024*1024);
         define('GB', MB*1024);
         define('TB', GB*1024);
+        set_time_limit(0);
         if (empty($bucket = qingstor_get_bucket())) {
             return;
         }
