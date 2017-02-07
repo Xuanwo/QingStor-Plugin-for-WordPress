@@ -3,7 +3,7 @@
 add_action('admin_menu', 'qingstor_settings_menu');
 function qingstor_settings_menu()
 {
-    add_options_page('QingStor', 'QingStor', 'manage_options', 'qingstor', 'qingstor_settings_page');
+    add_options_page('WP-QingStor', 'WP-QingStor', 'manage_options', 'qingstor', 'qingstor_settings_page');
 }
 
 function qingstor_settings_page()
@@ -18,7 +18,7 @@ function qingstor_settings_page()
         }
         if (! empty($_POST['bucket_name'])) {
             $options['bucket_name'] = qingstor_test_input($_POST['bucket_name']);
-            // 设置 Bucket 存储空间策略
+            // Set policy of the Bucket.
             qingstor_bucket_init();
         }
         if (! empty($_POST['upload_types'])) {
@@ -55,7 +55,7 @@ function qingstor_settings_page()
         QingStorBackup::get_instance()->once_bakcup();
         qingstor_redirect();
     } elseif ($_GET['upload_uploads']) {
-        // 上传 wp-content/uploads/ 文件夹
+        // Upload wp-content/uploads/ directory.
         QingStorUpload::get_instance()->upload_uploads();
         qingstor_redirect();
     }

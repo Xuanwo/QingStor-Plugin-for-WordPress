@@ -55,12 +55,15 @@ final class QingStorBackup
         wp_clear_scheduled_hook('qingstor_once_backup_hook');
     }
 
-    // 一秒后触发的单次任务，用于立即备份
+    // Trigger after one second for "Backup Now"
     public function once_bakcup() {
         wp_schedule_single_event(time() + 1, 'qingstor_once_backup_hook');
     }
 
-    // 导出数据库，压缩 WordPress 目录和至临时文件夹，备份至 QingStor Bucket，然后删除临时目录
+	/**
+	 * Dump WordPress database, and zip wordpress directory to temporary directory,
+	 * then upload zip file to QingStor Bucket and delete the temporary directory.
+	 */
     public function backup()
     {
         set_time_limit(0);
@@ -70,40 +73,40 @@ final class QingStorBackup
         $options = get_option('qingstor-options');
         $backup_path = $this->get_backup_path();
 
-        // 使用 zip 备份 WordPress 目录(ABSPATH)
+        // zip ABSPATH.
         $cwd = getcwd();
         chdir(ABSPATH);
         $command = 'zip -r ' . $backup_path['zip_path'] . ' .' ;
         exec($command, $output, $retvar1);
-        // 使用 mysqldump 备份数据库
+        // mysqldump the WordPress database.
         unset($output);
         $mysql_connect_args = $this->get_mysql_connect_args();
         $command = 'mysqldump ' . $mysql_connect_args . ' > ' . $backup_path['database_path'];
         exec($command, $output, $retvar2);
-        // 添加 mysql 备份到 zip 文件中
+        // Add database.sql to the backup zip file.
         chdir($backup_path['backup_dir']);
         unset($output);
         $command = 'zip -m ' . $backup_path['zip_path'] . ' ' . wp_basename($backup_path['database_path']);
         exec($command, $output, $retvar3);
         chdir($cwd);
 
-        // 确保三个备份命令都成功（返回 0）时，上传到 QingStor Bucket
+        // Make Sure that the three commands are successful (return 0) and upload to Bucket.
         if (! $retvar1 && ! $retvar2 && ! $retvar3) {
             $this->check_backups_num();
 
             $bucket_zip_path = $options['backup_prefix'] . wp_basename($backup_path['zip_path']);
             $files[$backup_path['zip_path']] = $bucket_zip_path;
             QingStorUpload::get_instance()->upload_files($files);
-            // 上传成功后，发送邮件通知
+            // Mail notification.
             $this->send_mail($bucket_zip_path);
         }
-        // 删除临时目录及文件
+        // Delete the temporary directory.
         if (file_exists($backup_path['backup_dir'])) {
             $this->deldir($backup_path['backup_dir']);
         }
     }
 
-    // 检查备份文件的数量，如果超过设置的最大数量，则删除最早的部分
+	// Check the number of backups in the Bucket. If lager than user's setting, delete earlier.
     public function check_backups_num() {
         if (empty($bucket = qingstor_get_bucket())) {
             return;
@@ -126,7 +129,7 @@ final class QingStorBackup
         }
     }
 
-    // 钩子函数，添加一些定时任务用到的频率
+    // Hook function, add more recurences for scheduled backup.
     function more_reccurences() {
         return array(
             'weekly' => array('interval' => 604800, 'display' => 'Once Weekly'),
@@ -135,7 +138,7 @@ final class QingStorBackup
         );
     }
 
-    // 获取 mysqldump 所必须的参数，包括用户名，密码和 wordpress 数据库名
+	// Get username, password and database name for mysqldump.
     public function get_mysql_connect_args() {
         global $wpdb;
 
@@ -149,7 +152,7 @@ final class QingStorBackup
         return $args;
     }
 
-    // 递归地删除一个文件夹
+    // Delete a directory.
     public function deldir($dirname) {
         $dir = opendir($dirname);
         while ($file = readdir($dir)) {
@@ -166,7 +169,7 @@ final class QingStorBackup
         rmdir($dirname);
     }
 
-    // 产生一定长度的随机字符串，用于生成本地备份的临时目录
+	// Generate a random string of a certain length for the name of temporary directory.
     public function generate_rand_string($length = 8) {
         static $chars = 'qwertyuiopasdfghjklzxcvbnm0123456789';
         $str = '';
@@ -177,7 +180,7 @@ final class QingStorBackup
         return $str;
     }
 
-    // 返回本地备份的临时目录
+	// Get the path of temporary directory.
     public function get_backup_path()
     {
         $options = get_option('qingstor-options');
@@ -219,13 +222,11 @@ final class QingStorBackup
         return true;
     }
 
-    /**
-     * 检查 WordPress 安装目录是否可读，以及 zip 和 mysqldump 命令是否可用
-     * @return bool
-     */
+    // Check if /wordpress (ABSPATH) is readable and if zip and mysqldump is available.
     function is_backup_possible()
     {
-        if (! wp_is_writable(WP_CONTENT_DIR)) {
+		$wp_content_dir = defined(WP_CONTENT_DIR) ? WP_CONTENT_DIR : ABSPATH . 'wp-content';
+        if (! wp_is_writable($wp_content_dir)) {
             return false;
         }
         if (! is_readable(ABSPATH)) {

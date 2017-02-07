@@ -1,6 +1,6 @@
 <?php
 /*
-Plugin Name: QingStor 青云对象存储
+Plugin Name: WP-QingStor
 Plugin URI:  https://github.com/yungkcx/QingStor-Plugin-for-WordPress
 Description: QingStor Plugin for WordPress. Backup function requires `zip' and `mysqldump' program.
 Text Domain: qingstor
@@ -18,7 +18,7 @@ require_once 'php/qingstor-backup.php';
 register_activation_hook(__FILE__, 'qingstor_activation');
 register_deactivation_hook(__FILE__, 'qingstor_deactivation');
 
-// 添加文本域
+// Add textdomain.
 add_action('init', 'qingstor_load_textdomain');
 function qingstor_load_textdomain()
 {

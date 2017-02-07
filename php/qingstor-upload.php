@@ -20,7 +20,6 @@ final class QingStorUpload
         return self::$instance;
     }
 
-    // 获取 $dirname 下所有文件的（包括子文件中的文件）本地路径和远端路径
     public function get_files_local_and_remote($dirname, $basedir, $prefix) {
         $dir = opendir($dirname);
         $files = array();
@@ -38,7 +37,7 @@ final class QingStorUpload
         return $files;
     }
 
-    // 上传 wp-content/uploads/ 的所有文件
+    // Upload wp-content/uploads/
     public function upload_uploads() {
         $options = get_option('qingstor-options');
         $basedir = rtrim(wp_get_upload_dir()['basedir'], '/');
@@ -46,18 +45,11 @@ final class QingStorUpload
         $this->scheduled_upload_files($files);
     }
 
-    /**
-     * 使用定时事件后台上传文件的驱动函数
-     * @param array $local_remote_path "本地绝对路径 => Bucket 绝对路径" 形式的数组
-     */
     public function scheduled_upload_files($local_remote_path) {
         wp_schedule_single_event(time() + 1, 'qingstor_scheduled_upload_hook', array($local_remote_path));
     }
 
-    /**
-     * 上传多个文件
-     * @param array $local_remote_path "本地绝对路径 => Bucket 绝对路径" 形式的数组
-     */
+    // Upload multiple files.
     public function upload_files($local_remote_path) {
         define('MB', 1024*1024);
         define('GB', MB*1024);
@@ -69,14 +61,17 @@ final class QingStorUpload
 
         foreach ($local_remote_path as $local_path => $remote_path) {
             if (file_exists($local_path)) {
-                // 如果小于 5GB 直接上传，否则使用 分段上传，不支持 50TB 以上的文件
+	            /**
+	             * If the file is less than 5GB, use putObject(), else use multipart upload.
+	             * Not support the file larger than 50TB.
+	             */
                 if (($size = filesize($local_path)) < GB*5) {
                     $bucket->putObject($remote_path, array('body' => file_get_contents($local_path)));
                 } elseif ($size < TB*50) {
                     $offset = 0;
                     $step   = 5*GB;
                     $nparts = 0;
-                    // 使用文件的前 512 字节计算 md5 作为 etag
+                    // Use md5 value of the first 512 bytes of the file for etag.
                     $etag   = md5(file_get_contents($local_path, null, null, 0, 512));
 
                     $res = $bucket->initiateMultipartUpload($remote_path);
@@ -84,7 +79,7 @@ final class QingStorUpload
                         return;
                     }
                     $upload_id = $res->{'upload_id'};
-                    // 如果可能产生小于 4MB 的块，则加上 5GB，然后分成两块优先处理
+	                // If there will be a block less than 4MB, then add 5GB to it and priority process.
                     if ($size % (5*GB) < 4*MB) {
                         $tmp_step = (int)((($size % (5*GB)) + 5*GB) / 2 + 1);
                         for ($i = 0; $i < 2; $i++) {
@@ -100,7 +95,7 @@ final class QingStorUpload
                             $nparts++;
                         }
                     }
-                    // 剩下的块应该是 5GB 的整数倍
+                    // The rest must be an integer multiple of 5GB.
                     while ($content = file_get_contents($local_path, null, null, $offset, $step)) {
                         $bucket->uploadMultipart(
                             $remote_path,
@@ -113,7 +108,7 @@ final class QingStorUpload
                         $offset += $step;
                         $nparts++;
                     }
-                    // 完成分段上传
+                    // Complete multipart upload.
                     $res = $bucket->listMultipart(
                         $remote_path,
                         array(
@@ -135,8 +130,8 @@ final class QingStorUpload
     }
 
     /**
-     * 上传指定 Media 文件
-     * @param array $data 有 'file' 键的关联数组
+     * Upload files by metadata.
+     * @param array $data  metadata or array with the key 'file'
      */
     public function upload_data($data)
     {
@@ -148,10 +143,10 @@ final class QingStorUpload
             return;
         }
 
-        // 原图|上传文件
+        // Upload Original image or other files.
         $files[$wp_upload_dir['basedir'] . '/' . $data['file']] = $upload_prefix . $data['file'];
 
-        // 缩略图
+        // Upload thumbnails.
         if (isset($data['sizes']) && count($data['sizes']) > 0) {
             foreach ($data['sizes'] as $key => $thumb_data) {
                 $files[$wp_upload_dir['basedir'] . '/' . substr($data['file'], 0, 8) . $thumb_data['file']] =
@@ -163,7 +158,7 @@ final class QingStorUpload
     }
 
     /**
-     * 匹配文章中的 Media 文件
+     * Match the URL of Media files in article.
      * @param String $data
      * @return array
      */
@@ -177,7 +172,7 @@ final class QingStorUpload
     }
 
     /**
-     * 获取文件在 QingStor Bucket 上对应的 URL
+     * Get the URL of Media files in QingStor Bucket.
      * @param $object
      * @return string
      */
@@ -192,7 +187,7 @@ final class QingStorUpload
         return $url;
     }
 
-    // 钩子函数，上传文件时，自动同步到 QingStor Bucket
+    // Hook function. Auto Sync to QingStor Bucket when upload Media files to WordPress.
     public function add_attachment($post_ID)
     {
         $wp_upload_dir = wp_get_upload_dir();
@@ -210,7 +205,7 @@ final class QingStorUpload
     }
 
 
-    // 钩子函数，在页面渲染时，替换资源文件路径的域名
+    // Hook function. Replace the URL of Media files when article is rendering.
     public function the_content($content)
     {
         if (! get_option('qingstor-options')['replace_url']) {
@@ -225,7 +220,7 @@ final class QingStorUpload
         return $content;
     }
 
-    //钩子函数，设置 srcset，防止一些 QingStor Bucket 的图片无法在文章中显示
+    // Hook function. Set srcset for images.
     public function calculate_image_srcset($src)
     {
         if (! get_option('qingstor-options')['replace_url']) {

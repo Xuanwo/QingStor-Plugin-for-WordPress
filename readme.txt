@@ -1,30 +1,30 @@
-=== QingStor 青云对象存储 ===
+=== wp-qingstor ===
 
 Contributors:       yungkcx
-Tags:               wordpress, 备份，QingStor
+Tags:               wordpress, Backup，QingStor
 Requires at least:  4.5
 Tested up to:       4.7
 Stable tag:         trunk
 License:            GPLv2 or later
 License URI:        http://www.gnu.org/licenses/gpl-2.0.html
 
-QingStor 青云对象存储服务 WordPress 插件，支持定时备份，自动同步媒体库。
+QingStor Plugin for WordPress, support scheduled backup and auto sync Media Library.
 
-== Description ==
+== Description == 
 
-当你设置好插件的各项参数并启用后：
-(1)向媒体库上传文件时，会自动上传到设置好的 QingStor Bucket
-(2)开启 `自动替换资源文件 URL`，插件会在文章渲染时自动替换资源文件的 URL 为 Bucket 地址
-(3)定时备份的邮件通知依赖 PHP email 的相关设置
-(4)备份功能需要安装有 zip 和 mysqldump 程序，可分别在终端使用 `zip --version` 和 `mysqldump --version` 命令检查
+After setting:
+1. Auto sync to QingStor Bucket when upload Media files to WordPress Media Library.
+2. After selecting `Automaticlly Replace the Media Files URL`, the plugin will auto replace the local URL of Media files with QingStor Bucket URL when article is rendering.
+3. Email notification of Scheduled Backup depend on PHP email settings.
+4. Backup function requires `zip` and `mysqldump` command.
 
 == Installation ==
 
-1. 上传 `qingstor-plugin-for-wordpress` 目录到 `/wp-content/plugins/` 目录
-2. 在后台插件菜单激活该插件
-3. 在 `设置`-`QingStor` 里设置好各项各项参数即可
+1. Upload the plugin files to the `/wp-content/plugins/plugin-name` directory, or install the plugin through the WordPress plugins screen directly.
+2. Activate the plugin through the 'Plugins' screen in WordPress.
+3. Use the Settings->QingStor screen to configure the plugin.
 
 == Changelog ==
 
 = 0.2 =
-* 初始版本
+* Initial Version

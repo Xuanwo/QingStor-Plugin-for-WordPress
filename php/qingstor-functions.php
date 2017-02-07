@@ -8,7 +8,7 @@ define('QS_SRVERR', 2);
 define('QS_OK', 3);
 
 /**
- * 测试 QingStor SDK 返回值
+ * Test the returned statusCode of QingStor SDK.
  * @param $response
  * @return int
  */
@@ -24,7 +24,7 @@ function qingstor_http_status($response)
 }
 
 /**
- * 检查 access key 和 secret key，若正确，返回 service
+ * Test access key and secret key，return service if OK, else return null.
  * @return null|QingStor
  */
 function qingstor_get_service()
@@ -44,7 +44,7 @@ function qingstor_get_service()
 }
 
 /**
- * 检查目前的 bucket_name 指向的 bucket，若存在，返回 bucket
+ * Test bucket_name on QingStor，reuturn bucket if the Bucket is exists, else return null.
  * @return null|\QingStor\SDK\Service\Bucket
  */
 function qingstor_get_bucket()
@@ -62,7 +62,7 @@ function qingstor_get_bucket()
     return $bucket;
 }
 
-// 设置 Bucket 的存储空间策略为“允许所有用户读 Media 文件夹”
+// Set policy of the Bucket.
 function qingstor_bucket_init()
 {
     if (!empty($bucket = qingstor_get_bucket())) {
@@ -83,7 +83,6 @@ function qingstor_bucket_init()
     }
 }
 
-// 测试设置的 prefix，如果开头有 '/'，则去掉，如果结尾没有 '/'，则添加
 function qingstor_test_prefix($prefix) {
     return ltrim(rtrim($prefix, '/') . '/', '/');
 }
@@ -93,7 +92,7 @@ function qingstor_test_url($url) {
 }
 
 /**
- * 表单输入验证
+ * Test input of <form>.
  * @param String $data
  * @return String string
  */
@@ -105,6 +104,7 @@ function qingstor_test_input($data)
     return $data;
 }
 
+// Get URL of current page for redirect.
 function qingstor_get_page_url()
 {
     $pageURL = 'http';
@@ -117,7 +117,6 @@ function qingstor_get_page_url()
 
     $this_page = $_SERVER["REQUEST_URI"];
 
-    // 只取 ? 前面的内容
     if (strpos($this_page, "?") !== false)
     {
         $this_pages = explode("?", $this_page);
@@ -135,6 +134,7 @@ function qingstor_get_page_url()
     return $pageURL;
 }
 
+// After `Upload the directory wp-content/uploads/' or `Backup Now'.
 function qingstor_redirect()
 {
     $url = qingstor_get_page_url() . '?page=qingstor';
