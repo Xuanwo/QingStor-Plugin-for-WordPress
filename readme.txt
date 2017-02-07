@@ -13,10 +13,10 @@ QingStor Plugin for WordPress, support scheduled backup and auto sync Media Libr
 == Description == 
 
 After setting:
-1. Auto sync to QingStor Bucket when upload Media files to WordPress Media Library.
-2. After selecting `Automaticlly Replace the Media Files URL`, the plugin will auto replace the local URL of Media files with QingStor Bucket URL when article is rendering.
-3. Email notification of Scheduled Backup depend on PHP email settings.
-4. Backup function requires `zip` and `mysqldump` command.
+1. Auto sync to QingStor Bucket when uploading Media files to WordPress Media Library.
+2. After selecting `Automatically Replace the Media Files URL`, the plugin will auto replace the local URL of Media files with QingStor Bucket URL when the article is rendering.
+3. Email notification of Scheduled Backup depends on PHP email settings.
+4. The backup function requires `zip` and `mysqldump` command.
 
 == Installation ==
 
