@@ -1,4 +1,4 @@
-=== wp-qingstor ===
+=== WP-QingStor ===
 
 Contributors:       yungkcx
 Tags:               wordpress, Backup，QingStor
