@@ -1,4 +1,4 @@
-=== QingStor 青云对象存储 ===
+=== QingStor 对象存储 ===
 
 Contributors:       yungkcx
 Tags:               wordpress, Backup，QingStor
@@ -8,7 +8,7 @@ Stable tag:         trunk
 License:            GPLv2 or later
 License URI:        http://www.gnu.org/licenses/gpl-2.0.html
 
-QingStor 青云对象存储服务 WordPress 插件，支持定时备份，自动同步媒体库。
+QingStor 对象存储服务 WordPress 插件，支持定时备份，自动同步媒体库。
 
 == Description ==
 
