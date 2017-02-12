@@ -192,7 +192,7 @@ final class QingStorUpload
     {
         $wp_upload_dir = wp_get_upload_dir();
         $attach_url = wp_get_attachment_url($post_ID);
-        $file_path = $wp_upload_dir['basedir'] . '/' . ltrim(ltrim($attach_url, $wp_upload_dir['baseurl']), '/');
+        $file_path = $wp_upload_dir['basedir'] . '/' . ltrim($attach_url, $wp_upload_dir['baseurl']) . '/';
         $file_type = wp_check_filetype($file_path);
 
         if (strstr($file_type['type'], 'image') == false) {

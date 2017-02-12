@@ -167,7 +167,7 @@ msgstr "保存设置"
 
 #. Plugin Name of the plugin/theme
 msgid "QingStor"
-msgstr "QingStor 青云对象存储"
+msgstr "QingStor 对象存储"
 
 #. Plugin URI of the plugin/theme
 msgid "https://github.com/yungkcx/QingStor-Plugin-for-WordPress"
@@ -177,7 +177,7 @@ msgstr ""
 msgid ""
 "QingStor Plugin for WordPress. Backup function requires `zip' and "
 "`mysqldump' program."
-msgstr "QingStor 青云对象存储服务 WordPress 插件。备份功能需要 zip 和 mysqldump 程序。"
+msgstr "QingStor 对象存储服务 WordPress 插件。备份功能需要 zip 和 mysqldump 程序。"
 
 #. Author of the plugin/theme
 msgid "yungkcx"

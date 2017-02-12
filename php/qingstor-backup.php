@@ -78,6 +78,7 @@ final class QingStorBackup
         chdir(ABSPATH);
         $command = 'zip -r ' . $backup_path['zip_path'] . ' .' ;
         exec($command, $output, $retvar1);
+
         // mysqldump the WordPress database.
         unset($output);
         $mysql_connect_args = $this->get_mysql_connect_args();
@@ -186,9 +187,8 @@ final class QingStorBackup
         $options = get_option('qingstor-options');
         $backup_dir = $options['backup_dir'];
         if (! isset($backup_dir) || ! file_exists($backup_dir)) {
-            $wp_content_dir = defined(WP_CONTENT_DIR) ? WP_CONTENT_DIR : ABSPATH . 'wp-content';
             $rand_suffix = $this->generate_rand_string();
-            $backup_dir =  "$wp_content_dir/QingStor-Backup-$rand_suffix";
+            $backup_dir =  WP_CONTENT_DIR . "/QingStor-Backup-$rand_suffix";
             $options['backup_dir'] = $backup_dir;
             mkdir($backup_dir);
             chmod($backup_dir, 0777);
@@ -225,8 +225,7 @@ final class QingStorBackup
     // Check if /wordpress (ABSPATH) is readable and if zip and mysqldump is available.
     function is_backup_possible()
     {
-		$wp_content_dir = defined(WP_CONTENT_DIR) ? WP_CONTENT_DIR : ABSPATH . 'wp-content';
-        if (! wp_is_writable($wp_content_dir)) {
+        if (! wp_is_writable(WP_CONTENT_DIR) || ! is_readable(WP_CONTENT_DIR)) {
             return false;
         }
         if (! is_readable(ABSPATH)) {
@@ -247,7 +246,7 @@ final class QingStorBackup
         }
 
         $message = 'QingStor backup ' . $filename . ' at ' . date('Y/m/d H:i', current_time('timestamp'));
-        $headers = 'Form: wordpress@' . preg_replace('#^www\.#', '', strtolower($_SERVER['SERVER_NAME'])) . "\n";
+        $headers = 'From: wordpress@' . preg_replace('#^www\.#', '', strtolower($_SERVER['SERVER_NAME'])) . "\n";
         @wp_mail($to, get_bloginfo('name') . ' ' . 'WordPress backup', $message, $headers);
     }
 }

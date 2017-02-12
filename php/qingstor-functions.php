@@ -6,6 +6,8 @@ use QingStor\SDK\Config;
 define('QS_CLIERR', 1);
 define('QS_SRVERR', 2);
 define('QS_OK', 3);
+define('QS_MAX_STRLEN', 2048);
+define('QS_MAX_KEYLEN', 40);
 
 /**
  * Test the returned statusCode of QingStor SDK.
@@ -83,25 +85,57 @@ function qingstor_bucket_init()
     }
 }
 
-function qingstor_test_prefix($prefix) {
-    return ltrim(rtrim($prefix, '/') . '/', '/');
-}
-
-function qingstor_test_url($url) {
-    return rtrim($url, '/') . '/';
-}
-
-/**
- * Test input of <form>.
- * @param String $data
- * @return String string
- */
+// Test input of <form>.
 function qingstor_test_input($data)
 {
     $data = trim($data);
     $data = stripslashes($data);
     $data = htmlspecialchars($data);
-    return $data;
+    return strlen($data) > QS_MAX_STRLEN ? substr($data, 0, QS_MAX_STRLEN) : $data;
+}
+
+function qingstor_test_key($key)
+{
+    $key = qingstor_test_input($key);
+    if (strlen($key) > QS_MAX_KEYLEN) {
+        $key = '';
+    }
+    return $key;
+}
+
+function qingstor_test_bucket_name($name)
+{
+    $name = qingstor_test_input($name);
+    if (strlen($name) > 63 || strlen($name) < 6) {
+        $name = 'bucket-name';
+    }
+    return $name;
+}
+
+function qingstor_test_prefix($prefix) {
+    return ltrim(rtrim(qingstor_test_input($prefix), '/') . '/', '/');
+}
+
+function qingstor_test_url($url) {
+    return rtrim(qingstor_test_input($url), '/') . '/';
+}
+
+function qingstor_test_num($num, $min, $max)
+{
+    $num = intval($num);
+    if (! $num || $num > $max || $num < $min) {
+        return $min;
+    }
+    return $num;
+}
+
+function qingstor_test_email($email)
+{
+    $email = sanitize_email($email);
+    if (is_email($email)) {
+        return $email;
+    }
+    return '';
 }
 
 // Get URL of current page for redirect.

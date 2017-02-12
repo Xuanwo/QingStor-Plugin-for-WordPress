@@ -20,9 +20,10 @@ After setting:
 
 == Installation ==
 
-1. Upload the plugin files to the `/wp-content/plugins/plugin-name` directory, or install the plugin through the WordPress plugins screen directly.
-2. Activate the plugin through the 'Plugins' screen in WordPress.
-3. Use the Settings->QingStor screen to configure the plugin.
+1. Upload the plugin to the `/wp-content/plugins/` directory, or install the plugin through the WordPress plugins screen directly.
+2. Enter the QingStor plugin directory and run `composer install`.
+3. Activate the plugin through the 'Plugins' screen in WordPress.
+4. Use the Settings->QingStor screen to configure the plugin.
 
 == Changelog ==
 
