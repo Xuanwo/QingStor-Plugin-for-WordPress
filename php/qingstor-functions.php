@@ -111,13 +111,14 @@ function qingstor_test_bucket_name($name)
     }
     return $name;
 }
-
 function qingstor_test_prefix($prefix) {
-    return ltrim(rtrim(qingstor_test_input($prefix), '/') . '/', '/');
+    $prefix = sanitize_text_field($prefix);
+    return ltrim(rtrim($prefix, '/') . '/', '/');
 }
 
 function qingstor_test_url($url) {
-    return rtrim(qingstor_test_input($url), '/') . '/';
+    $url = esc_url($url);
+    return rtrim($url, '/') . '/';
 }
 
 function qingstor_test_num($num, $min, $max)
