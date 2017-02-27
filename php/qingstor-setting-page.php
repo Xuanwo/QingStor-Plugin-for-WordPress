@@ -61,7 +61,7 @@
                     </tr>
                     <tr>
                         <th scope="row">
-                            <label for="upload_prefix"><?php _e('Prefix', 'qingstor'); ?></label>
+                            <label for="upload_prefix"><?php _e('Upload Prefix', 'qingstor'); ?></label>
                         </th>
                         <td>
                             <input id="upload_prefix" class="type-text regular-text" name="upload_prefix" type="text" value="<?php echo $qingstor_upload_prefix; ?>">
