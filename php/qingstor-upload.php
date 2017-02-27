@@ -46,6 +46,7 @@ final class QingStorUpload
     }
 
     public function scheduled_upload_files($local_remote_path) {
+        $this->log(serialize($local_remote_path));
         wp_schedule_single_event(time() + 1, 'qingstor_scheduled_upload_hook', array($local_remote_path));
     }
 
@@ -192,7 +193,7 @@ final class QingStorUpload
     {
         $wp_upload_dir = wp_get_upload_dir();
         $attach_url = wp_get_attachment_url($post_ID);
-        $file_path = $wp_upload_dir['basedir'] . '/' . ltrim($attach_url, $wp_upload_dir['baseurl']) . '/';
+        $file_path = $wp_upload_dir['basedir'] . '/' . ltrim($attach_url, $wp_upload_dir['baseurl']);
         $file_type = wp_check_filetype($file_path);
 
         if (strstr($file_type['type'], 'image') == false) {
@@ -204,6 +205,12 @@ final class QingStorUpload
         $this->upload_data($data);
     }
 
+    public function log($str)
+    {
+        $f = fopen(WP_PLUGIN_DIR . '/log', 'a+');
+        fwrite($f, $str . "\n");
+        fclose($f);
+    }
 
     // Hook function. Replace the URL of Media files when article is rendering.
     public function the_content($content)

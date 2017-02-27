@@ -111,6 +111,7 @@ function qingstor_test_bucket_name($name)
     }
     return $name;
 }
+
 function qingstor_test_prefix($prefix) {
     $prefix = sanitize_text_field($prefix);
     return ltrim(rtrim($prefix, '/') . '/', '/');

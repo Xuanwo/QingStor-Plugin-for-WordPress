@@ -38,7 +38,7 @@
                     </th>
                     <td>
                         <input id="bucket" class="type-text regular-text" name="bucket_name" type="text" value="<?php echo $qingstor_bucket; ?>">
-                        <p class="description"><strong><?php _e('Notice: The Bucket should be only used for WordPress. Please make sure the Bucket is empty.', 'qingstor'); ?></strong></p>
+                        <p class="description"><?php _e('All backups and Media files will be uploaded to the Bucket.', 'qingstor'); ?></p>
                     </td>
                 </tr>
                 </tbody>
@@ -83,6 +83,7 @@
                         </th>
                         <td>
                             <input class="checkbox" type="checkbox" id="replace_url" name="replace_url" value="true" <?php echo $qingstor_replace_url ? "checked='checked'" : ''; ?>>
+                            <p class="description"><?php _e('If checked, you should to set the policy of the Bucket as allow * to get object.', 'qingstor'); ?></p>
                         </td>
                     </tr>
                     </tbody>
@@ -116,13 +117,13 @@
                             }
                         </script>
                         <select id="schedule_type" name="schedule_recurrence[schedule_type]">
-                            <option onclick="action(0, 0, 0)" value="manually">Manually Only</option>
-                            <option onclick="action(0, 0, 0)" value="hourly">Once Hourly</option>
-                            <option onclick="action(0, 0, 1)" value="twicedaily">Twice Daily</option>
-                            <option onclick="action(0, 0, 1)" value="daily">Once Daily</option>
-                            <option onclick="action(1, 0, 1)" selected="selected" value="weekly">Once Weekly</option>
-                            <option onclick="action(1, 0, 1)" value="fortnightly">Once Every Two Weeks</option>
-                            <option onclick="action(0, 1, 1)" value="monthly">Once Monthly</option>
+                            <option onclick="action(0, 0, 0)" value="manually"><?php _e('Manually Only', 'qingstor'); ?></option>
+                            <option onclick="action(0, 0, 0)" value="hourly"><?php _e('Once Hourly', 'qingstor'); ?></option>
+                            <option onclick="action(0, 0, 1)" value="twicedaily"><?php _e('Twice Daily', 'qingstor'); ?></option>
+                            <option onclick="action(0, 0, 1)" value="daily"><?php _e('Once Daily', 'qingstor'); ?></option>
+                            <option onclick="action(1, 0, 1)" selected="selected" value="weekly"><?php _e('Once Weekly', 'qingstor'); ?></option>
+                            <option onclick="action(1, 0, 1)" value="fortnightly"><?php _e('Once Every Two Weeks', 'qingstor'); ?></option>
+                            <option onclick="action(0, 1, 1)" value="monthly"><?php _e('Once Monthly', 'qingstor'); ?></option>
                         </select>
                     </td>
                 </tr>

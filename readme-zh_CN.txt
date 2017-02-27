@@ -27,5 +27,9 @@ QingStor 对象存储服务 WordPress 插件，支持定时备份，自动同步
 
 == Changelog ==
 
+= 0.3 =
+* 修复了 Media 文件不能同步的问题
+* 不再自动设置 Bucket 的 Policy
+
 = 0.2 =
 * 初始版本

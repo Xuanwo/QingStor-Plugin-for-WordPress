@@ -3,7 +3,7 @@
 add_action('admin_menu', 'qingstor_settings_menu');
 function qingstor_settings_menu()
 {
-    add_options_page('WP-QingStor', 'WP-QingStor', 'manage_options', 'qingstor', 'qingstor_settings_page');
+    add_options_page('QingStor', 'QingStor', 'manage_options', 'qingstor', 'qingstor_settings_page');
 }
 
 function qingstor_settings_page()
@@ -19,7 +19,7 @@ function qingstor_settings_page()
         if (! empty($_POST['bucket_name'])) {
             $options['bucket_name'] = qingstor_test_bucket_name($_POST['bucket_name']);
             // Set policy of the Bucket.
-            qingstor_bucket_init();
+            // qingstor_bucket_init();
         }
         if (! empty($_POST['upload_types'])) {
             $options['upload_types'] = qingstor_test_input($_POST['upload_types']);

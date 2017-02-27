@@ -27,5 +27,9 @@ After setting:
 
 == Changelog ==
 
+= 0.3 =
+* Fixed the problem that the Media files could not be synchronized
+* The Policy of the Bucket is no longer automatically set
+
 = 0.2 =
 * Initial Version
