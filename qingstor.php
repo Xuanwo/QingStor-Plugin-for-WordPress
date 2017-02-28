@@ -2,8 +2,9 @@
 /*
 Plugin Name: WP-QingStor
 Plugin URI:  https://github.com/yungkcx/QingStor-Plugin-for-WordPress
-Description: QingStor Plugin for WordPress. The Backup function requires `zip' and `mysqldump' program.
-Text Domain: qingstor
+Description: QingStor Plugin for WordPress. The Backup function requires zip and mysqldump program.
+Text Domain: wp-qingstor
+Domain Path: languages/
 Version:     0.3
 Author:      yungkcx
 Author URI:  http://yungkcx.github.io
@@ -22,5 +23,5 @@ register_deactivation_hook(__FILE__, 'qingstor_deactivation');
 add_action('init', 'qingstor_load_textdomain');
 function qingstor_load_textdomain()
 {
-    load_plugin_textdomain('qingstor', false, dirname(plugin_basename(__FILE__)) . '/languages/');
+    load_plugin_textdomain('wp-qingstor', false, dirname(plugin_basename(__FILE__)) . '/languages/');
 }
