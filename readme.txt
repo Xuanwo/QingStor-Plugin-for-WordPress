@@ -24,6 +24,7 @@ After setting:
 2. Enter the QingStor plugin directory and run `composer install`.
 3. Activate the plugin through the 'Plugins' screen in WordPress.
 4. Use the Settings->QingStor screen to configure the plugin.
+5. Only support PHP5.6 or later.
 
 == Changelog ==
 

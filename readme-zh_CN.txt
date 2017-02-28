@@ -24,6 +24,7 @@ QingStor 对象存储服务 WordPress 插件，支持定时备份，自动同步
 2. 进入本插件目录，在终端下运行 `composer install`（需要安装有 composer）。
 3. 在后台插件菜单激活该插件
 4. 在 `设置`-`QingStor` 里设置好各项各项参数即可
+5. 仅支持 PHP5.6 或更高版本
 
 == Changelog ==
 
