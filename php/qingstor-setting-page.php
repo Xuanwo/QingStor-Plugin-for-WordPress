@@ -6,19 +6,27 @@
             if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 ?>
                 <div id="setting-error-settings_updated" class="updated settings-error notice is-dismissible">
-                    <p>
-                        <strong><?php _e('Settings saved.', 'wp-qingstor'); ?></strong>
-                    </p>
+                <p>
+                    <strong>
+                <?php
+                if ($_REQUEST['once_backup'] || $_REQUEST['upload_uploads']) {
+                    _e('Background task start.', 'wp-qingstor');
+                } else {
+                    _e('Settings saved.', 'wp-qingstor');
+                }
+                ?>
+                    </strong>
+                </p>
                 </div>
                 <?php
             }
             ?>
-            <p>*<?php _e('The following three items need to be created at ', 'wp-qingstor'); ?><a target="_blank" href="https://console.qingcloud.com/access_keys/"><?php _e('QingCloud Console', 'wp-qingstor'); ?></a><?php _e('.', 'wp-qingstor'); ?></p>
+            <p>*<?php _e('The following items need to be created at ', 'wp-qingstor'); ?><a target="_blank" href="https://console.qingcloud.com/access_keys/"><?php _e('QingCloud Console', 'wp-qingstor'); ?></a><?php _e('.', 'wp-qingstor'); ?></p>
             <table class="form-table">
                 <tbody>
                 <tr>
                     <th scope="row">
-                        <label  for="access">ACCESS KEY</label>
+                        <label  for="access">ACCESS KEY ID</label>
                     </th>
                     <td>
                         <input id="access" class="type-text regular-text" name="access_key" type="text" value="<?php echo $qingstor_access; ?>">
@@ -26,7 +34,7 @@
                 </tr>
                 <tr>
                     <th scope="row">
-                        <label for="secret">SECRET KEY</label>
+                        <label for="secret">SECRET ACCESS KEY</label>
                     </th>
                     <td>
                         <input id="secret" class="type-text regular-text" name="secret_key" type="text" value="<?php echo $qingstor_secret; ?>">
@@ -41,12 +49,20 @@
                         <p class="description"><?php _e('All backups and Media files will be uploaded to the Bucket.', 'wp-qingstor'); ?></p>
                     </td>
                 </tr>
+                <tr>
+                    <th>
+                        <label for="set_policy"><?php _e('Automaticlly Set Policy', 'wp-qingstor'); ?></label>
+                    </th>
+                    <td>
+                        <input class="checkbox" type="checkbox" id="set_policy" name="set_policy" value="true" <?php echo $qingstor_set_policy ? "checked='checked'" : ''; ?>><?php _e('(If not necessary, do not change it.)', 'wp-qingstor'); ?>
+                    </td>
+                </tr>
                 </tbody>
             </table>
         </div>
         <div id="upload_settings">
             <h2><?php _e('Upload Settings', 'wp-qingstor'); ?></h2>
-            <a href="?page=qingstor&upload_uploads=1"><?php _e('Upload the directory wp-content/uploads/', 'wp-qingstor'); ?></a>
+            <input id="upload_uploads" class="button button-primary" name="upload_uploads" value="<?php _e('Sync wp-content/uploads/ to Bucket', 'wp-qingstor'); ?>" type="submit">
             <div>
                 <table class="form-table">
                     <tbody>
@@ -83,7 +99,6 @@
                         </th>
                         <td>
                             <input class="checkbox" type="checkbox" id="replace_url" name="replace_url" value="true" <?php echo $qingstor_replace_url ? "checked='checked'" : ''; ?>>
-                            <p class="description"><?php _e('If checked, you should to set the policy of the Bucket as allow * to get object.', 'wp-qingstor'); ?></p>
                         </td>
                     </tr>
                     </tbody>
@@ -92,7 +107,7 @@
         </div>
         <div id="backup_site">
             <h2 class="title"><?php _e('Backup WordPress', 'wp-qingstor'); ?></h2>
-            <a href="?page=qingstor&once_backup=1"><?php _e('Backup Now', 'wp-qingstor'); ?></a>
+            <input id="once_backup" class="button button-primary" name="once_backup" value="<?php _e('Backup Now', 'wp-qingstor'); ?>" type="submit">
             <table class="form-table">
                 <tbody>
                 <tr>

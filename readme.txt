@@ -20,15 +20,21 @@ After setting:
 2. After selecting `Automatically Replace the Media Files URL`, the plugin will auto replace the local URL of Media files with QingStor Bucket URL when the article is rendering.
 3. Email notification of Scheduled Backup depends on PHP email settings.
 4. The backup function requires `zip` and `mysqldump` command.
+5. If the option `Automatically Set Policy` is checked, the plugin will set Acl as 'public read' and set Bucket Policy as 'deny all users to get object from backup prefix'. If not necessary, do not change it.
 
 == Installation ==
 
 1. Upload the plugin to the `/wp-content/plugins/` directory, or install the plugin through the WordPress plugins screen directly.
 2. Activate the plugin through the 'Plugins' screen in WordPress.
 3. Use the Settings->QingStor screen to configure the plugin.
-4. Only support PHP5.6 or later.
+4. Only support PHP 5.6 or higher.
 
 == Changelog ==
+
+= 0.3.1 =
+* Added some prompt message
+* Added detection for PHP version and zip and mysqldump
+* Added option for auto set the policy of Bucket
 
 = 0.3 =
 * Fixed the problem that the Media files could not be synchronized

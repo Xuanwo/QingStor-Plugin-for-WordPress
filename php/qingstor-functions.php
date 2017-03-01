@@ -64,20 +64,53 @@ function qingstor_get_bucket()
     return $bucket;
 }
 
-// Set policy of the Bucket.
+// Set ACL and policy for the Bucket.
 function qingstor_bucket_init()
 {
     if (!empty($bucket = qingstor_get_bucket())) {
         $options = get_option('qingstor-options');
+
+        $response = $bucket->getACL(array());
+        if (qingstor_http_status($response) != QS_OK) {
+            return;
+        }
+        $userid = $response->owner['id'];
+
+        $res = $bucket->putACL(
+            array(
+                'acl' => array(
+                    array(
+                        'grantee'    => array(
+                            'type'   => 'user',
+                            'id'     => $userid
+                        ),
+                        'permission' => 'FULL_CONTROL'
+                    ),
+                    array(
+                        'grantee'    => array(
+                            'type'   => 'group',
+                            'name'     => 'QS_ALL_USERS'
+                        ),
+                        'permission' => 'READ'
+                    )
+                )
+            )
+        );
+        if (qingstor_http_status($res) != QS_OK) {
+            var_dump($res);
+            echo "<br>$userid";
+            die();
+        }
+
         $bucket->putPolicy(
             array(
-                "statement" => array(
+                'statement' => array(
                     array(
-                        "id" => "allow all users to get object",
-                        "user" => "*",
-                        "action" => array("get_object"),
-                        "effect" => "allow",
-                        "resource" => array($options['bucket_name'] . '/' . $options['upload_prefix'] . '*'),
+                        'id'       => 'backup-blacklist',
+                        'user'     => '*',
+                        'action'   => array('get_object', 'create_object', 'delete_object', 'head_object', 'list_object_parts', 'upload_object_part', 'abort_multipart_upload', 'initiate_multipart_upload', 'complete_multipart_upload'),
+                        'effect'   => 'deny',
+                        'resource' => array($options['bucket_name'] . '/' . $options['backup_prefix'] . '*'),
                     )
                 )
             )
@@ -85,7 +118,7 @@ function qingstor_bucket_init()
     }
 }
 
-// Test input of <form>.
+// Test input for <form>.
 function qingstor_test_input($data)
 {
     $data = trim($data);
@@ -177,27 +210,4 @@ function qingstor_redirect()
     echo "<script language='javascript' type='text/javascript'>";
     echo "window.location.href='$url'";
     echo "</script>";
-}
-
-function qingstor_activation()
-{
-    $options = array(
-        'upload_types'  => 'jpg|jpeg|png|gif|mp3|doc|pdf|ppt|pps',
-        'upload_prefix' => 'wordpress/uploads/',
-        'backup_prefix' => 'wordpress/backup/',
-        'schedule_recurrence' => array(
-            'start_day_month' => '1',
-            'start_hours'     => '3',
-            'start_minutes'   => '0',
-        ),
-        'bucket_url'    => 'https://bucket-name.pek3a.qingstor.com/',
-        'backup_num'    => '7'
-    );
-    update_option('qingstor-options', $options);
-}
-
-function qingstor_deactivation()
-{
-    QingStorBackup::get_instance()->clear_schedule();
-    delete_option('qingstor-options');
 }

@@ -20,6 +20,7 @@ QingStor 对象存储服务 WordPress 插件，支持定时备份，自动同步
 2. 开启 `自动替换资源文件 URL`，插件会在文章渲染时自动替换资源文件的 URL 为 Bucket 地址。
 3. 定时备份的邮件通知依赖 PHP email 的相关设置。
 4. 备份功能需要安装有 zip 和 mysqldump 程序，可分别在终端使用 `zip --version` 和 `mysqldump --version` 命令检查。
+5. 开启 `自动设置存储空间策略` 后，插件会设置 Bucket 的权限为‘公开可读’，以及设置存储空间策略为‘禁止所有用户对备份文件所在目录操作’。如非必要，无需修改。
 
 == Installation ==
 
@@ -30,9 +31,14 @@ QingStor 对象存储服务 WordPress 插件，支持定时备份，自动同步
 
 == Changelog ==
 
+= 0.3.1 =
+* 添加了一部分提示消息
+* 添加了 PHP 版本以及 zip 和 mysqldump 的检测
+* 添加了自动设置存储空间策略的选项
+
 = 0.3 =
 * 修复了 Media 文件不能同步的问题
-* 不再自动设置 Bucket 的 Policy
+* 不再自动设置 Bucket 的存储空间策略
 
 = 0.2 =
 * 初始版本

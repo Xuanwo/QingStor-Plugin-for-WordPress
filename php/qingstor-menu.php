@@ -9,7 +9,12 @@ function qingstor_settings_menu()
 function qingstor_settings_page()
 {
     $options = get_option('qingstor-options');
-    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    if ($_REQUEST['once_backup']) {
+        QingStorBackup::get_instance()->once_bakcup();
+    } elseif ($_REQUEST['upload_uploads']) {
+        // Upload wp-content/uploads/ directory.
+        QingStorUpload::get_instance()->upload_uploads();
+    } elseif ($_SERVER['REQUEST_METHOD'] == 'POST') {
         if (! empty($_POST['access_key'])) {
             $options['access_key'] = qingstor_test_key($_POST['access_key']);
         }
@@ -19,7 +24,9 @@ function qingstor_settings_page()
         if (! empty($_POST['bucket_name'])) {
             $options['bucket_name'] = qingstor_test_bucket_name($_POST['bucket_name']);
             // Set policy of the Bucket.
-            // qingstor_bucket_init();
+            if ($_POST['set_policy']) {
+                qingstor_bucket_init();
+            }
         }
         if (! empty($_POST['upload_types'])) {
             $options['upload_types'] = qingstor_test_input($_POST['upload_types']);
@@ -38,6 +45,11 @@ function qingstor_settings_page()
         } else {
             $options['replace_url'] = false;
         }
+        if ($_POST['set_policy']) {
+            $options['set_policy'] = true;
+        } else {
+            $options['set_policy'] = false;
+        }
         if (! empty($_POST['backup_num'])) {
             $options['backup_num'] = qingstor_test_num($_POST['backup_num'], 1, 1000);
         }
@@ -51,13 +63,6 @@ function qingstor_settings_page()
         }
         $options['schedule_recurrence'] = $_POST['schedule_recurrence'];
         QingStorBackup::get_instance()->scheduled_backup($_POST['schedule_recurrence']);
-    } elseif ($_GET['once_backup']) {
-        QingStorBackup::get_instance()->once_bakcup();
-        qingstor_redirect();
-    } elseif ($_GET['upload_uploads']) {
-        // Upload wp-content/uploads/ directory.
-        QingStorUpload::get_instance()->upload_uploads();
-        qingstor_redirect();
     }
     update_option('qingstor-options', $options);
 
@@ -72,6 +77,7 @@ function qingstor_settings_page()
     $qingstor_bucket        = $options['bucket_name'];
     $qingstor_replace_url   = $options['replace_url'];
     $qingstor_bucket_url    = $options['bucket_url'];
+    $qingstor_set_policy    = $options['set_policy'];
 
     require_once 'qingstor-setting-page.php';
 }
