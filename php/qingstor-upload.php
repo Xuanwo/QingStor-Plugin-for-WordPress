@@ -46,7 +46,6 @@ final class QingStorUpload
     }
 
     public function scheduled_upload_files($local_remote_path) {
-        $this->log(serialize($local_remote_path));
         wp_schedule_single_event(time() + 1, 'qingstor_scheduled_upload_hook', array($local_remote_path));
     }
 
@@ -203,13 +202,6 @@ final class QingStorUpload
             $data = wp_generate_attachment_metadata($post_ID, $file_path);
         }
         $this->upload_data($data);
-    }
-
-    public function log($str)
-    {
-        $f = fopen(WP_PLUGIN_DIR . '/log', 'a+');
-        fwrite($f, $str . "\n");
-        fclose($f);
     }
 
     // Hook function. Replace the URL of Media files when article is rendering.

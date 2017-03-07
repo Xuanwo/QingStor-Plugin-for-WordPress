@@ -2,9 +2,9 @@
 # This file is distributed under the same license as the WP-QingStor package.
 msgid ""
 msgstr ""
-"Project-Id-Version: WP-QingStor 0.3.1\n"
+"Project-Id-Version: WP-QingStor 0.3.2\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/qingstor\n"
-"POT-Creation-Date: 2017-03-01 14:21:07+00:00\n"
+"POT-Creation-Date: 2017-03-02 12:50:32+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -12,193 +12,193 @@ msgstr ""
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 
-#: php/qingstor-setting-page.php:2
+#: php/qingstor-setting-page.php:3 php/qingstor-setting-page.php:25
 msgid "Settings"
 msgstr ""
 
-#: php/qingstor-setting-page.php:13
-msgid "Background task start."
-msgstr ""
-
-#: php/qingstor-setting-page.php:15
-msgid "Settings saved."
-msgstr ""
-
-#: php/qingstor-setting-page.php:24
-msgid "The following items need to be created at "
-msgstr ""
-
-#: php/qingstor-setting-page.php:24
-msgid "QingCloud Console"
-msgstr ""
-
-#: php/qingstor-setting-page.php:24
-msgid "."
-msgstr ""
-
-#: php/qingstor-setting-page.php:45
-msgid "Name"
-msgstr ""
-
-#: php/qingstor-setting-page.php:49
-msgid "All backups and Media files will be uploaded to the Bucket."
-msgstr ""
-
-#: php/qingstor-setting-page.php:54
-msgid "Automaticlly Set Policy"
-msgstr ""
-
-#: php/qingstor-setting-page.php:57
-msgid "(If not necessary, do not change it.)"
-msgstr ""
-
-#: php/qingstor-setting-page.php:64
+#: php/qingstor-setting-page.php:4 php/qingstor-setting-page.php:85
 msgid "Upload Settings"
 msgstr ""
 
-#: php/qingstor-setting-page.php:65
-msgid "Sync wp-content/uploads/ to Bucket"
+#: php/qingstor-setting-page.php:5 php/qingstor-setting-page.php:130
+msgid "Backup WordPress"
 msgstr ""
 
-#: php/qingstor-setting-page.php:71
-msgid "File Types"
+#: php/qingstor-setting-page.php:34
+msgid "Background task start."
+msgstr ""
+
+#: php/qingstor-setting-page.php:36
+msgid "Settings saved."
+msgstr ""
+
+#: php/qingstor-setting-page.php:45
+msgid "The following items need to be created at "
+msgstr ""
+
+#: php/qingstor-setting-page.php:45
+msgid "QingCloud Console"
+msgstr ""
+
+#: php/qingstor-setting-page.php:45
+msgid "."
+msgstr ""
+
+#: php/qingstor-setting-page.php:66
+msgid "Name"
+msgstr ""
+
+#: php/qingstor-setting-page.php:70
+msgid "All backups and Media files will be uploaded to the Bucket."
 msgstr ""
 
 #: php/qingstor-setting-page.php:75
+msgid "Automaticlly Set Policy"
+msgstr ""
+
+#: php/qingstor-setting-page.php:78
+msgid "(If not necessary, do not change it.)"
+msgstr ""
+
+#: php/qingstor-setting-page.php:86
+msgid "Sync wp-content/uploads/ to Bucket"
+msgstr ""
+
+#: php/qingstor-setting-page.php:92
+msgid "File Types"
+msgstr ""
+
+#: php/qingstor-setting-page.php:96
 msgid "File suffixes to upload."
 msgstr ""
 
-#: php/qingstor-setting-page.php:80
+#: php/qingstor-setting-page.php:101
 msgid "Upload Prefix"
 msgstr ""
 
-#: php/qingstor-setting-page.php:84
+#: php/qingstor-setting-page.php:105
 msgid "Media Files will be uploaded to the directory."
 msgstr ""
 
-#: php/qingstor-setting-page.php:93
+#: php/qingstor-setting-page.php:114
 msgid ""
 "Bucket URL. If there is a CDN, please fill in according to the actual "
 "situation. (Should add http:// or https://)"
 msgstr ""
 
-#: php/qingstor-setting-page.php:98
+#: php/qingstor-setting-page.php:119
 msgid "Automaticlly Replace the Media Files "
 msgstr ""
 
-#: php/qingstor-setting-page.php:109
-msgid "Backup WordPress"
-msgstr ""
-
-#: php/qingstor-setting-page.php:110
+#: php/qingstor-setting-page.php:131
 msgid "Backup Now"
 msgstr ""
 
-#: php/qingstor-setting-page.php:115
+#: php/qingstor-setting-page.php:136
 msgid "Backup Prefix"
 msgstr ""
 
-#: php/qingstor-setting-page.php:119
+#: php/qingstor-setting-page.php:140
 msgid "Backups will be stored in the directory."
 msgstr ""
 
-#: php/qingstor-setting-page.php:124
+#: php/qingstor-setting-page.php:145
 msgid "Scheduled Backup"
 msgstr ""
 
-#: php/qingstor-setting-page.php:135
+#: php/qingstor-setting-page.php:156
 msgid "Manually Only"
 msgstr ""
 
-#: php/qingstor-setting-page.php:136
+#: php/qingstor-setting-page.php:157
 msgid "Once Hourly"
 msgstr ""
 
-#: php/qingstor-setting-page.php:137
+#: php/qingstor-setting-page.php:158
 msgid "Twice Daily"
 msgstr ""
 
-#: php/qingstor-setting-page.php:138
+#: php/qingstor-setting-page.php:159
 msgid "Once Daily"
 msgstr ""
 
-#: php/qingstor-setting-page.php:139
+#: php/qingstor-setting-page.php:160
 msgid "Once Weekly"
 msgstr ""
 
-#: php/qingstor-setting-page.php:140
+#: php/qingstor-setting-page.php:161
 msgid "Once Every Two Weeks"
 msgstr ""
 
-#: php/qingstor-setting-page.php:141
+#: php/qingstor-setting-page.php:162
 msgid "Once Monthly"
 msgstr ""
 
-#: php/qingstor-setting-page.php:147
+#: php/qingstor-setting-page.php:168
 msgid "Start Day"
 msgstr ""
 
-#: php/qingstor-setting-page.php:151
+#: php/qingstor-setting-page.php:172
 msgid "Monday"
 msgstr ""
 
-#: php/qingstor-setting-page.php:152
+#: php/qingstor-setting-page.php:173
 msgid "Tuesday"
 msgstr ""
 
-#: php/qingstor-setting-page.php:153
+#: php/qingstor-setting-page.php:174
 msgid "Wednesday"
 msgstr ""
 
-#: php/qingstor-setting-page.php:154
+#: php/qingstor-setting-page.php:175
 msgid "Thursday"
 msgstr ""
 
-#: php/qingstor-setting-page.php:155
+#: php/qingstor-setting-page.php:176
 msgid "Friday"
 msgstr ""
 
-#: php/qingstor-setting-page.php:156
+#: php/qingstor-setting-page.php:177
 msgid "Saturday"
 msgstr ""
 
-#: php/qingstor-setting-page.php:157
+#: php/qingstor-setting-page.php:178
 msgid "Sunday"
 msgstr ""
 
-#: php/qingstor-setting-page.php:163
+#: php/qingstor-setting-page.php:184
 msgid "Start Day of Month"
 msgstr ""
 
-#: php/qingstor-setting-page.php:171
+#: php/qingstor-setting-page.php:192
 msgid "Start Time"
 msgstr ""
 
-#: php/qingstor-setting-page.php:177
+#: php/qingstor-setting-page.php:198
 msgid "Hours"
 msgstr ""
 
-#: php/qingstor-setting-page.php:181
+#: php/qingstor-setting-page.php:202
 msgid "Minutes"
 msgstr ""
 
-#: php/qingstor-setting-page.php:184
+#: php/qingstor-setting-page.php:205
 msgid "24-hour format."
 msgstr ""
 
-#: php/qingstor-setting-page.php:189
+#: php/qingstor-setting-page.php:210
 msgid "Number of backups to store"
 msgstr ""
 
-#: php/qingstor-setting-page.php:198
+#: php/qingstor-setting-page.php:219
 msgid "Email to "
 msgstr ""
 
-#: php/qingstor-setting-page.php:202
+#: php/qingstor-setting-page.php:223
 msgid "If it cannot send a mail, check your PHP mail settings."
 msgstr ""
 
-#: php/qingstor-setting-page.php:209
+#: php/qingstor-setting-page.php:230
 msgid "Save Changes"
 msgstr ""
 

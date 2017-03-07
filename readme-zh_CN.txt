@@ -29,7 +29,15 @@ QingStor 对象存储服务 WordPress 插件，支持定时备份，自动同步
 3. 在 设置->QingStor 里设置好各项各项参数即可。
 4. 仅支持 PHP5.6 或更高版本。
 
+== Screenshots ==
+
+1. QingStor 定时备份
+2. QingStor 设置
+
 == Changelog ==
+
+= 0.3.2 =
+* 使用 tab 区分各 section
 
 = 0.3.1 =
 * 添加了一部分提示消息

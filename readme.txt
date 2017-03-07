@@ -29,7 +29,15 @@ After setting:
 3. Use the Settings->QingStor screen to configure the plugin.
 4. Only support PHP 5.6 or higher.
 
+== Screenshots ==
+
+1. QingStor Scheduled Backup
+2. QingStor Settings
+
 == Changelog ==
+
+= 0.3.2 =
+* Used tabs for sections
 
 = 0.3.1 =
 * Added some prompt message

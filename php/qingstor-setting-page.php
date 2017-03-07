@@ -1,7 +1,28 @@
 <div class="wrap">
-    <h1>QingStor <?php _e('Settings', 'wp-qingstor'); ?></h1>
+    <h1 class="nav-tab-wrapper">
+        <a href="javascript:void(0)" class="nav-tab" onclick="tabs_switch(event, 'basic')" id="tab-title-basic">QingStor <?php _e('Settings', 'wp-qingstor'); ?></a>
+        <a href="javascript:void(0)" class="nav-tab" onclick="tabs_switch(event, 'upload')" id="tab-title-upload"><?php _e('Upload Settings', 'wp-qingstor'); ?></a>
+        <a href="javascript:void(0)" class="nav-tab" onclick="tabs_switch(event, 'backup')" id="tab-title-backup"><?php _e('Backup WordPress', 'wp-qingstor'); ?></a>
+    </h1>
+    <script>
+    function tabs_switch(evt, tabname) {
+        var i, tabcontent, tablinks;
+        tabcontent = document.getElementsByClassName("div-tab");
+        for (i = 0; i < tabcontent.length; i++) {
+            tabcontent[i].style.display = "none";
+        }
+        tablinks = document.getElementsByClassName("nav-tab");
+        for (i = 0; i < tablinks.length; i++) {
+            tablinks[i].className = tablinks[i].className.replace(" active", "");
+        }
+        document.getElementById("tab-" + tabname).style.display = "block";
+        evt.currentTarget.className += " nav-tab-active";
+    }
+    document.getElementById("tab-title-basic").click();
+    </script>
     <form method="POST" action="">
-        <div id="basic_settings">
+        <div id="tab-basic" class="div-tab">
+            <h2>QingStor <?php _e('Settings', 'wp-qingstor'); ?></h2>
             <?php
             if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 ?>
@@ -60,7 +81,7 @@
                 </tbody>
             </table>
         </div>
-        <div id="upload_settings">
+        <div id="tab-upload" class="div-tab">
             <h2><?php _e('Upload Settings', 'wp-qingstor'); ?></h2>
             <input id="upload_uploads" class="button button-primary" name="upload_uploads" value="<?php _e('Sync wp-content/uploads/ to Bucket', 'wp-qingstor'); ?>" type="submit">
             <div>
@@ -105,8 +126,8 @@
                 </table>
             </div>
         </div>
-        <div id="backup_site">
-            <h2 class="title"><?php _e('Backup WordPress', 'wp-qingstor'); ?></h2>
+        <div id="tab-backup" class="div-tab">
+            <h2><?php _e('Backup WordPress', 'wp-qingstor'); ?></h2>
             <input id="once_backup" class="button button-primary" name="once_backup" value="<?php _e('Backup Now', 'wp-qingstor'); ?>" type="submit">
             <table class="form-table">
                 <tbody>
