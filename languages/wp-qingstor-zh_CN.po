@@ -109,99 +109,99 @@ msgstr "备份文件将保存到该目录。"
 msgid "Scheduled Backup"
 msgstr "定时备份"
 
-#: php/qingstor-setting-page.php:156
+#: php/qingstor-setting-page.php:149
 msgid "Manually Only"
 msgstr "仅手动备份"
 
-#: php/qingstor-setting-page.php:157
+#: php/qingstor-setting-page.php:150
 msgid "Once Hourly"
 msgstr "每小时一次"
 
-#: php/qingstor-setting-page.php:158
+#: php/qingstor-setting-page.php:151
 msgid "Twice Daily"
 msgstr "两天一次"
 
-#: php/qingstor-setting-page.php:159
+#: php/qingstor-setting-page.php:152
 msgid "Once Daily"
 msgstr "每天一次"
 
-#: php/qingstor-setting-page.php:160
+#: php/qingstor-setting-page.php:153
 msgid "Once Weekly"
 msgstr "每周一次"
 
-#: php/qingstor-setting-page.php:161
+#: php/qingstor-setting-page.php:154
 msgid "Once Every Two Weeks"
 msgstr "两周一次"
 
-#: php/qingstor-setting-page.php:162
+#: php/qingstor-setting-page.php:155
 msgid "Once Monthly"
 msgstr "每月一次"
 
-#: php/qingstor-setting-page.php:168
+#: php/qingstor-setting-page.php:161
 msgid "Start Day"
 msgstr "开始日期"
 
-#: php/qingstor-setting-page.php:172
+#: php/qingstor-setting-page.php:165
 msgid "Monday"
 msgstr "星期一"
 
-#: php/qingstor-setting-page.php:173
+#: php/qingstor-setting-page.php:166
 msgid "Tuesday"
 msgstr "星期二"
 
-#: php/qingstor-setting-page.php:174
+#: php/qingstor-setting-page.php:167
 msgid "Wednesday"
 msgstr "星期三"
 
-#: php/qingstor-setting-page.php:175
+#: php/qingstor-setting-page.php:168
 msgid "Thursday"
 msgstr "星期四"
 
-#: php/qingstor-setting-page.php:176
+#: php/qingstor-setting-page.php:169
 msgid "Friday"
 msgstr "星期五"
 
-#: php/qingstor-setting-page.php:177
+#: php/qingstor-setting-page.php:170
 msgid "Saturday"
 msgstr "星期六"
 
-#: php/qingstor-setting-page.php:178
+#: php/qingstor-setting-page.php:171
 msgid "Sunday"
 msgstr "星期日"
 
-#: php/qingstor-setting-page.php:184
+#: php/qingstor-setting-page.php:177
 msgid "Start Day of Month"
 msgstr "开始日期"
 
-#: php/qingstor-setting-page.php:192
+#: php/qingstor-setting-page.php:185
 msgid "Start Time"
 msgstr "开始时间"
 
-#: php/qingstor-setting-page.php:198
+#: php/qingstor-setting-page.php:191
 msgid "Hours"
 msgstr "时"
 
-#: php/qingstor-setting-page.php:202
+#: php/qingstor-setting-page.php:195
 msgid "Minutes"
 msgstr "分"
 
-#: php/qingstor-setting-page.php:205
+#: php/qingstor-setting-page.php:198
 msgid "24-hour format."
 msgstr "24 小时制。（依赖 WordPress 的时区设置）"
 
-#: php/qingstor-setting-page.php:210
+#: php/qingstor-setting-page.php:223
 msgid "Number of backups to store"
 msgstr "保存备份文件的最大数量"
 
-#: php/qingstor-setting-page.php:219
+#: php/qingstor-setting-page.php:212
 msgid "Email to "
 msgstr "邮件通知"
 
-#: php/qingstor-setting-page.php:223
+#: php/qingstor-setting-page.php:216
 msgid "If it cannot send a mail, check your PHP mail settings."
 msgstr "如果不能发送，请检查 PHP 邮件相关配置。"
 
-#: php/qingstor-setting-page.php:230
+#: php/qingstor-setting-page.php:239
 msgid "Save Changes"
 msgstr "保存设置"
 

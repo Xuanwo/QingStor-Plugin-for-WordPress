@@ -145,21 +145,14 @@
                         <label for="schedule_type"><?php _e('Scheduled Backup', 'wp-qingstor'); ?></label>
                     </th>
                     <td>
-                        <script>
-                            function action(day, date, time) {
-                                document.getElementById('start_day').style.display = day ? 'table-row' : 'none';
-                                document.getElementById('start_date').style.display = date ? 'table-row' : 'none';
-                                document.getElementById('start_time').style.display = time ? 'table-row' : 'none';
-                            }
-                        </script>
                         <select id="schedule_type" name="schedule_recurrence[schedule_type]">
-                            <option onclick="action(0, 0, 0)" value="manually"><?php _e('Manually Only', 'wp-qingstor'); ?></option>
-                            <option onclick="action(0, 0, 0)" value="hourly"><?php _e('Once Hourly', 'wp-qingstor'); ?></option>
-                            <option onclick="action(0, 0, 1)" value="twicedaily"><?php _e('Twice Daily', 'wp-qingstor'); ?></option>
-                            <option onclick="action(0, 0, 1)" value="daily"><?php _e('Once Daily', 'wp-qingstor'); ?></option>
-                            <option onclick="action(1, 0, 1)" selected="selected" value="weekly"><?php _e('Once Weekly', 'wp-qingstor'); ?></option>
-                            <option onclick="action(1, 0, 1)" value="fortnightly"><?php _e('Once Every Two Weeks', 'wp-qingstor'); ?></option>
-                            <option onclick="action(0, 1, 1)" value="monthly"><?php _e('Once Monthly', 'wp-qingstor'); ?></option>
+                            <option onclick="schedule_type_switch(0, 0, 0)" value="manually"><?php _e('Manually Only', 'wp-qingstor'); ?></option>
+                            <option onclick="schedule_type_switch(0, 0, 0)" value="hourly"><?php _e('Once Hourly', 'wp-qingstor'); ?></option>
+                            <option onclick="schedule_type_switch(0, 0, 1)" value="twicedaily"><?php _e('Twice Daily', 'wp-qingstor'); ?></option>
+                            <option onclick="schedule_type_switch(0, 0, 1)" value="daily"><?php _e('Once Daily', 'wp-qingstor'); ?></option>
+                            <option onclick="schedule_type_switch(1, 0, 1)" value="weekly"><?php _e('Once Weekly', 'wp-qingstor'); ?></option>
+                            <option onclick="schedule_type_switch(1, 0, 1)" value="fortnightly"><?php _e('Once Every Two Weeks', 'wp-qingstor'); ?></option>
+                            <option onclick="schedule_type_switch(0, 1, 1)" value="monthly"><?php _e('Once Monthly', 'wp-qingstor'); ?></option>
                         </select>
                     </td>
                 </tr>
@@ -225,6 +218,22 @@
                 </tr>
                 </tbody>
             </table>
+            <script>
+                function schedule_type_switch(day, date, time) {
+                    document.getElementById('start_day').style.display = day ? 'table-row' : 'none';
+                    document.getElementById('start_date').style.display = date ? 'table-row' : 'none';
+                    document.getElementById('start_time').style.display = time ? 'table-row' : 'none';
+                }
+                var select = document.getElementById('schedule_type');
+                var str = "<?php echo $qingstor_recurrence['schedule_type']; ?>";
+                for (var i = 0; i < select.options.length; i++) {
+                    if (select.options[i].value == str) {
+                        select.options[i].selected = true;
+                        break;
+                    }
+                }
+                select.options[select.selectedIndex].click();
+            </script>
         </div>
         <p class="submit">
             <input id="submit" class="button button-primary" name="submit" value="<?php _e('Save Changes', 'wp-qingstor'); ?>" type="submit">

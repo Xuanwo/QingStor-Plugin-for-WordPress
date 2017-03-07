@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: WP-QingStor 0.3.2\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/qingstor\n"
-"POT-Creation-Date: 2017-03-02 12:50:32+00:00\n"
+"POT-Creation-Date: 2017-03-07 06:03:07+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -106,99 +106,99 @@ msgstr ""
 msgid "Scheduled Backup"
 msgstr ""
 
-#: php/qingstor-setting-page.php:156
+#: php/qingstor-setting-page.php:149
 msgid "Manually Only"
 msgstr ""
 
-#: php/qingstor-setting-page.php:157
+#: php/qingstor-setting-page.php:150
 msgid "Once Hourly"
 msgstr ""
 
-#: php/qingstor-setting-page.php:158
+#: php/qingstor-setting-page.php:151
 msgid "Twice Daily"
 msgstr ""
 
-#: php/qingstor-setting-page.php:159
+#: php/qingstor-setting-page.php:152
 msgid "Once Daily"
 msgstr ""
 
-#: php/qingstor-setting-page.php:160
+#: php/qingstor-setting-page.php:153
 msgid "Once Weekly"
 msgstr ""
 
-#: php/qingstor-setting-page.php:161
+#: php/qingstor-setting-page.php:154
 msgid "Once Every Two Weeks"
 msgstr ""
 
-#: php/qingstor-setting-page.php:162
+#: php/qingstor-setting-page.php:155
 msgid "Once Monthly"
 msgstr ""
 
-#: php/qingstor-setting-page.php:168
+#: php/qingstor-setting-page.php:161
 msgid "Start Day"
 msgstr ""
 
-#: php/qingstor-setting-page.php:172
+#: php/qingstor-setting-page.php:165
 msgid "Monday"
 msgstr ""
 
-#: php/qingstor-setting-page.php:173
+#: php/qingstor-setting-page.php:166
 msgid "Tuesday"
 msgstr ""
 
-#: php/qingstor-setting-page.php:174
+#: php/qingstor-setting-page.php:167
 msgid "Wednesday"
 msgstr ""
 
-#: php/qingstor-setting-page.php:175
+#: php/qingstor-setting-page.php:168
 msgid "Thursday"
 msgstr ""
 
-#: php/qingstor-setting-page.php:176
+#: php/qingstor-setting-page.php:169
 msgid "Friday"
 msgstr ""
 
-#: php/qingstor-setting-page.php:177
+#: php/qingstor-setting-page.php:170
 msgid "Saturday"
 msgstr ""
 
-#: php/qingstor-setting-page.php:178
+#: php/qingstor-setting-page.php:171
 msgid "Sunday"
 msgstr ""
 
-#: php/qingstor-setting-page.php:184
+#: php/qingstor-setting-page.php:177
 msgid "Start Day of Month"
 msgstr ""
 
-#: php/qingstor-setting-page.php:192
+#: php/qingstor-setting-page.php:185
 msgid "Start Time"
 msgstr ""
 
-#: php/qingstor-setting-page.php:198
+#: php/qingstor-setting-page.php:191
 msgid "Hours"
 msgstr ""
 
-#: php/qingstor-setting-page.php:202
+#: php/qingstor-setting-page.php:195
 msgid "Minutes"
 msgstr ""
 
-#: php/qingstor-setting-page.php:205
+#: php/qingstor-setting-page.php:198
 msgid "24-hour format."
 msgstr ""
 
-#: php/qingstor-setting-page.php:210
+#: php/qingstor-setting-page.php:203
 msgid "Number of backups to store"
 msgstr ""
 
-#: php/qingstor-setting-page.php:219
+#: php/qingstor-setting-page.php:212
 msgid "Email to "
 msgstr ""
 
-#: php/qingstor-setting-page.php:223
+#: php/qingstor-setting-page.php:216
 msgid "If it cannot send a mail, check your PHP mail settings."
 msgstr ""
 
-#: php/qingstor-setting-page.php:230
+#: php/qingstor-setting-page.php:239
 msgid "Save Changes"
 msgstr ""
 

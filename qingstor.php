@@ -66,9 +66,10 @@ function qingstor_activation()
         'upload_prefix' => 'wordpress/uploads/',
         'backup_prefix' => 'wordpress/backup/',
         'schedule_recurrence' => array(
+            'schedule_type'   => 'manually',
             'start_day_month' => '1',
             'start_hours'     => '3',
-            'start_minutes'   => '0',
+            'start_minutes'   => '0'
         ),
         'bucket_url'    => 'https://bucket-name.pek3a.qingstor.com/',
         'backup_num'    => '7',
