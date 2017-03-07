@@ -22,8 +22,8 @@ msgid "Upload Settings"
 msgstr "上传设置"
 
 #: php/qingstor-setting-page.php:5 php/qingstor-setting-page.php:130
-msgid "Backup WordPress"
-msgstr "备份 WordPress"
+msgid "Backup Settings"
+msgstr "备份设置"
 
 #: php/qingstor-setting-page.php:34
 msgid "Background task start."

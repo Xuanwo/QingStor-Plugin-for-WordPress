@@ -2,7 +2,7 @@
     <h1 class="nav-tab-wrapper">
         <a href="javascript:void(0)" class="nav-tab" onclick="tabs_switch(event, 'basic')" id="tab-title-basic">QingStor <?php _e('Settings', 'wp-qingstor'); ?></a>
         <a href="javascript:void(0)" class="nav-tab" onclick="tabs_switch(event, 'upload')" id="tab-title-upload"><?php _e('Upload Settings', 'wp-qingstor'); ?></a>
-        <a href="javascript:void(0)" class="nav-tab" onclick="tabs_switch(event, 'backup')" id="tab-title-backup"><?php _e('Backup WordPress', 'wp-qingstor'); ?></a>
+        <a href="javascript:void(0)" class="nav-tab" onclick="tabs_switch(event, 'backup')" id="tab-title-backup"><?php _e('Backup Settings', 'wp-qingstor'); ?></a>
     </h1>
     <script>
     function tabs_switch(evt, tabname) {
@@ -127,7 +127,7 @@
             </div>
         </div>
         <div id="tab-backup" class="div-tab">
-            <h2><?php _e('Backup WordPress', 'wp-qingstor'); ?></h2>
+            <h2><?php _e('Backup Settings', 'wp-qingstor'); ?></h2>
             <input id="once_backup" class="button button-primary" name="once_backup" value="<?php _e('Backup Now', 'wp-qingstor'); ?>" type="submit">
             <table class="form-table">
                 <tbody>

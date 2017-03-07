@@ -67,55 +67,61 @@ function qingstor_get_bucket()
 // Set ACL and policy for the Bucket.
 function qingstor_bucket_init()
 {
-    if (!empty($bucket = qingstor_get_bucket())) {
-        $options = get_option('qingstor-options');
-
-        $response = $bucket->getACL(array());
-        if (qingstor_http_status($response) != QS_OK) {
-            return;
-        }
-        $userid = $response->owner['id'];
-
-        $res = $bucket->putACL(
-            array(
-                'acl' => array(
-                    array(
-                        'grantee'    => array(
-                            'type'   => 'user',
-                            'id'     => $userid
-                        ),
-                        'permission' => 'FULL_CONTROL'
-                    ),
-                    array(
-                        'grantee'    => array(
-                            'type'   => 'group',
-                            'name'     => 'QS_ALL_USERS'
-                        ),
-                        'permission' => 'READ'
-                    )
-                )
-            )
-        );
-        if (qingstor_http_status($res) != QS_OK) {
-            var_dump($res);
-            echo "<br>$userid";
-            die();
-        }
-
-        $bucket->putPolicy(
-            array(
-                'statement' => array(
-                    array(
-                        'id'       => 'backup-blacklist',
-                        'user'     => '*',
-                        'action'   => array('get_object', 'create_object', 'delete_object', 'head_object', 'list_object_parts', 'upload_object_part', 'abort_multipart_upload', 'initiate_multipart_upload', 'complete_multipart_upload'),
-                        'effect'   => 'deny',
-                        'resource' => array($options['bucket_name'] . '/' . $options['backup_prefix'] . '*'),
-                    )
-                )
-            )
-        );
+    if (empty($bucket = qingstor_get_bucket())) {
+        return;
     }
+    $options = get_option('qingstor-options');
+
+    $response = $bucket->getACL();
+    if (qingstor_http_status($response) != QS_OK) {
+        return;
+    }
+    $userid = $response->owner['id'];
+
+    $res = $bucket->putACL(
+        array(
+            'acl' => array(
+                array(
+                    'grantee'    => array(
+                        'type'   => 'user',
+                        'id'     => $userid
+                    ),
+                    'permission' => 'FULL_CONTROL'
+                ),
+                array(
+                    'grantee'    => array(
+                        'type'   => 'group',
+                        'name'     => 'QS_ALL_USERS'
+                    ),
+                    'permission' => 'READ'
+                )
+            )
+        )
+    );
+    if (qingstor_http_status($res) != QS_OK) {
+        return;
+    }
+
+    $res = $bucket->getPolicy();
+    $current_policy = $res->statement;
+    foreach ($current_policy as $key => $value) {
+        if (empty($value['resource'])) {
+            $current_policy[$key]['resource'] = array($options['bucket_name']);
+        }
+    }
+    $bucket->putPolicy(
+        array(
+            'statement' => array_merge($current_policy, array(
+                array(
+                    'id'       => 'backup-blacklist',
+                    'user'     => '*',
+                    'action'   => array('get_object', 'create_object', 'delete_object', 'head_object', 'list_object_parts', 'upload_object_part', 'abort_multipart_upload', 'initiate_multipart_upload', 'complete_multipart_upload'),
+                    'effect'   => 'deny',
+                    'resource' => array($options['bucket_name'] . '/' . $options['backup_prefix'] . '*'),
+                )
+            ))
+        )
+    );
 }
 
 // Test input for <form>.
