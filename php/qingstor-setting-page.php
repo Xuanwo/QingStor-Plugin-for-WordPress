@@ -4,22 +4,6 @@
         <a href="javascript:void(0)" class="nav-tab" onclick="tabs_switch(event, 'upload')" id="tab-title-upload"><?php _e('Upload Settings', 'wp-qingstor'); ?></a>
         <a href="javascript:void(0)" class="nav-tab" onclick="tabs_switch(event, 'backup')" id="tab-title-backup"><?php _e('Backup Settings', 'wp-qingstor'); ?></a>
     </h1>
-    <script>
-    function tabs_switch(evt, tabname) {
-        var i, tabcontent, tablinks;
-        tabcontent = document.getElementsByClassName("div-tab");
-        for (i = 0; i < tabcontent.length; i++) {
-            tabcontent[i].style.display = "none";
-        }
-        tablinks = document.getElementsByClassName("nav-tab");
-        for (i = 0; i < tablinks.length; i++) {
-            tablinks[i].className = tablinks[i].className.replace(" active", "");
-        }
-        document.getElementById("tab-" + tabname).style.display = "block";
-        evt.currentTarget.className += " nav-tab-active";
-    }
-    document.getElementById("tab-title-basic").click();
-    </script>
     <form method="POST" action="">
         <div id="tab-basic" class="div-tab">
             <h2>QingStor <?php _e('Settings', 'wp-qingstor'); ?></h2>
@@ -75,7 +59,7 @@
                         <label for="set_policy"><?php _e('Automaticlly Set Policy', 'wp-qingstor'); ?></label>
                     </th>
                     <td>
-                        <input class="checkbox" type="checkbox" id="set_policy" name="set_policy" value="true" <?php echo $qingstor_set_policy ? "checked='checked'" : ''; ?>><?php _e('(If not necessary, do not change it.)', 'wp-qingstor'); ?>
+                        <input class="checkbox" type="checkbox" id="set_policy" name="set_policy" value="true" <?php echo $qingstor_set_policy ? "checked='checked'" : ''; ?>><?php _e('(Will set Acl as public read and set Bucket Policy as deny all users to get object from backup prefix. If not necessary, do not change it.)', 'wp-qingstor'); ?>
                     </td>
                 </tr>
                 </tbody>
@@ -233,6 +217,20 @@
                     }
                 }
                 select.options[select.selectedIndex].click();
+                function tabs_switch(evt, tabname) {
+                    var i, tabcontent, tablinks;
+                    tabcontent = document.getElementsByClassName("div-tab");
+                    for (i = 0; i < tabcontent.length; i++) {
+                        tabcontent[i].style.display = "none";
+                    }
+                    tablinks = document.getElementsByClassName("nav-tab");
+                    for (i = 0; i < tablinks.length; i++) {
+                        tablinks[i].className = tablinks[i].className.replace(" active", "");
+                    }
+                    document.getElementById("tab-" + tabname).style.display = "block";
+                    evt.currentTarget.className += " nav-tab-active";
+                }
+                document.getElementById("tab-title-basic").click();
             </script>
         </div>
         <p class="submit">
