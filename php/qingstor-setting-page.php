@@ -1,29 +1,23 @@
 <div class="wrap">
+    <h1><?php _e('QingStor Settings', 'wp-qingstor'); ?></h1>
     <h1 class="nav-tab-wrapper">
-        <a href="javascript:void(0)" class="nav-tab" onclick="tabs_switch(event, 'basic')" id="tab-title-basic">QingStor <?php _e('Settings', 'wp-qingstor'); ?></a>
+        <a href="javascript:void(0)" class="nav-tab" onclick="tabs_switch(event, 'basic')" id="tab-title-basic"><?php _e('Bucket Settings', 'wp-qingstor'); ?></a>
         <a href="javascript:void(0)" class="nav-tab" onclick="tabs_switch(event, 'upload')" id="tab-title-upload"><?php _e('Upload Settings', 'wp-qingstor'); ?></a>
         <a href="javascript:void(0)" class="nav-tab" onclick="tabs_switch(event, 'backup')" id="tab-title-backup"><?php _e('Backup Settings', 'wp-qingstor'); ?></a>
     </h1>
     <form method="POST" action="">
         <div id="tab-basic" class="div-tab">
-            <h2>QingStor <?php _e('Settings', 'wp-qingstor'); ?></h2>
             <?php
-            if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-                ?>
-                <div id="setting-error-settings_updated" class="updated settings-error notice is-dismissible">
-                <p>
-                    <strong>
-                <?php
-                if ($_REQUEST['once_backup'] || $_REQUEST['upload_uploads']) {
-                    _e('Background task start.', 'wp-qingstor');
+            if ($qingstor_error != QS_REQUEST_OK) {
+                qingstor_display_message('errors', $qingstor_error);
+            } else if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+                if ($_REQUEST['once_backup']) {
+                    qingstor_display_message('once_backup');
+                } else if ($_REQUEST['upload_uploads']) {
+                    qingstor_display_message('upload_uploads');
                 } else {
-                    _e('Settings saved.', 'wp-qingstor');
+                    qingstor_display_message('settings');
                 }
-                ?>
-                    </strong>
-                </p>
-                </div>
-                <?php
             }
             ?>
             <p>*<?php _e('The following items need to be created at ', 'wp-qingstor'); ?><a target="_blank" href="https://console.qingcloud.com/access_keys/"><?php _e('QingCloud Console', 'wp-qingstor'); ?></a><?php _e('.', 'wp-qingstor'); ?></p>
@@ -66,8 +60,9 @@
             </table>
         </div>
         <div id="tab-upload" class="div-tab">
-            <h2><?php _e('Upload Settings', 'wp-qingstor'); ?></h2>
+            <h2><?php _e('Operations', 'wp-qingstor'); ?></h2>
             <input id="upload_uploads" class="button button-primary" name="upload_uploads" value="<?php _e('Sync wp-content/uploads/ to Bucket', 'wp-qingstor'); ?>" type="submit">
+            <h2><?php _e('Settings', 'wp-qingstor'); ?></h2>
             <div>
                 <table class="form-table">
                     <tbody>
@@ -111,8 +106,9 @@
             </div>
         </div>
         <div id="tab-backup" class="div-tab">
-            <h2><?php _e('Backup Settings', 'wp-qingstor'); ?></h2>
+            <h2><?php _e('Operations', 'wp-qingstor'); ?></h2>
             <input id="once_backup" class="button button-primary" name="once_backup" value="<?php _e('Backup Now', 'wp-qingstor'); ?>" type="submit">
+            <h2><?php _e('Settings', 'wp-qingstor'); ?></h2>
             <table class="form-table">
                 <tbody>
                 <tr>
@@ -225,7 +221,7 @@
                     }
                     tablinks = document.getElementsByClassName("nav-tab");
                     for (i = 0; i < tablinks.length; i++) {
-                        tablinks[i].className = tablinks[i].className.replace(" active", "");
+                        tablinks[i].className = tablinks[i].className.replace(" nav-tab-active", "");
                     }
                     document.getElementById("tab-" + tabname).style.display = "block";
                     evt.currentTarget.className += " nav-tab-active";

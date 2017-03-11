@@ -1,5 +1,7 @@
 <?php
 
+define('QS_INVALID_BUCKET_URL', 31);
+
 final class QingStorUpload
 {
     private static $instance;
@@ -39,10 +41,14 @@ final class QingStorUpload
 
     // Upload wp-content/uploads/
     public function upload_uploads() {
+        if (($ret = qingstor_bucket_test()) != QS_REQUEST_OK) {
+            return $ret;
+        }
         $options = get_option('qingstor-options');
         $basedir = rtrim(wp_get_upload_dir()['basedir'], '/');
         $files   = $this->get_files_local_and_remote($basedir, $basedir, $options['upload_prefix']);
         $this->scheduled_upload_files($files);
+        return QS_REQUEST_OK;
     }
 
     public function scheduled_upload_files($local_remote_path) {
@@ -56,7 +62,7 @@ final class QingStorUpload
         define('TB', GB*1024);
         set_time_limit(0);
         if (empty($bucket = qingstor_get_bucket())) {
-            return;
+            return QS_CLIENT_ERROR;
         }
 
         foreach ($local_remote_path as $local_path => $remote_path) {
@@ -75,8 +81,8 @@ final class QingStorUpload
                     $etag   = md5(file_get_contents($local_path, null, null, 0, 512));
 
                     $res = $bucket->initiateMultipartUpload($remote_path);
-                    if (qingstor_http_status($res) != QS_OK) {
-                        return;
+                    if (($ret = qingstor_http_status($res)) != QS_REQUEST_OK) {
+                        return $ret;
                     }
                     $upload_id = $res->{'upload_id'};
 	                // If there will be a block less than 4MB, then add 5GB to it and priority process.
@@ -234,6 +240,15 @@ final class QingStorUpload
             }
         }
         return $src;
+    }
+
+    public function get_bucket_url_code($url) {
+        $headers = get_headers($url);
+        $code = substr($headers[0], 9, 3);
+        if ($code != '200') {
+            return QS_INVALID_BUCKET_URL;
+        }
+        return QS_REQUEST_OK;
     }
 }
 

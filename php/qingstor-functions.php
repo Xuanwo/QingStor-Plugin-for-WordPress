@@ -3,11 +3,11 @@
 use QingStor\SDK\Service\QingStor;
 use QingStor\SDK\Config;
 
-define('QS_CLIERR', 1);
-define('QS_SRVERR', 2);
-define('QS_OK', 3);
-define('QS_MAX_STRLEN', 2048);
-define('QS_MAX_KEYLEN', 40);
+define('QS_CLIENT_ERROR',  11);
+define('QS_SERVER_ERROR',  12);
+define('QS_REQUEST_OK',    13);
+define('QS_MAX_STRLEN',  2048);
+define('QS_MAX_KEYLEN',    40);
 
 /**
  * Test the returned statusCode of QingStor SDK.
@@ -17,11 +17,64 @@ define('QS_MAX_KEYLEN', 40);
 function qingstor_http_status($response)
 {
     if ($response->statusCode >= 500) {
-        return QS_SRVERR;
+        return QS_SERVER_ERROR;
     } elseif ($response->statusCode >= 400) {
-        return QS_CLIERR;
+        return QS_CLIENT_ERROR;
     } else {
-        return QS_OK;
+        return QS_REQUEST_OK;
+    }
+}
+
+function qingstor_display_message($type, $error)
+{
+    switch ($type) {
+    case 'errors':
+        switch ($error) {
+        case QS_CLIENT_ERROR:
+            $message = __('Incorrect Bucket Settings.', 'wp-qingstor');
+            break;
+        case QS_SERVER_ERROR:
+            $message = __('QingStor server error, please wait.', 'wp-qingstor');
+            break;
+        case QS_ABSPATH_NOT_READABLE:
+            $message = __('WordPress directory is not readable.', 'wp-qingstor');
+            break;
+        case QS_WP_CONTENT_NOT_WRITABLE:
+            $message = __('wp-content directory is not writable.', 'wp-qingstor');
+            break;
+        case QS_NOZIP:
+            $message = __('Require zip.', 'wp-qingstor');
+            break;
+        case QS_NOMYSQLDUMP:
+            $message = __('Require mysqldump.', 'wp-qingstor');
+            break;
+        case QS_INVALID_BUCKET_URL:
+            $message = __('Invalid Bucket URL.', 'wp-qingstor');
+            break;
+        }
+?>
+    <div id="message" class="error">
+        <p><?php echo $message; ?></p>
+    </div>
+<?php
+        break;
+    case 'once_backup':
+    case 'upload_uploads':
+    case 'settings':
+?>
+    <div id="setting-error-settings_updated" class="updated settings-error notice is-dismissible">
+        <p>
+            <strong><?php 
+            if ($type == 'settings') {
+                _e('Settings saved.', 'wp-qingstor');
+            } else {
+                _e('Background task start.', 'wp-qingstor');
+            }
+            ?></strong>
+        </p>
+    </div>
+<?php
+        break;
     }
 }
 
@@ -39,10 +92,21 @@ function qingstor_get_service()
     $service = new QingStor($config);
 
     $res = $service->listBuckets();
-    if (qingstor_http_status($res) != QS_OK) {
+    if (qingstor_http_status($res) != QS_REQUEST_OK) {
         return NULL;
     }
     return $service;
+}
+
+function qingstor_bucket_test()
+{
+    if (empty($service = qingstor_get_service())) {
+        return QS_CLIENT_ERROR;
+    }
+    $options = get_option('qingstor-options');
+    $bucket = $service->Bucket($options['bucket_name'], 'pek3a');
+    $res = $bucket->head();
+    return qingstor_http_status($res);
 }
 
 /**
@@ -58,7 +122,7 @@ function qingstor_get_bucket()
     $options = get_option('qingstor-options');
     $bucket = $service->Bucket($options['bucket_name'], 'pek3a');
     $res = $bucket->head();
-    if (qingstor_http_status($res) != QS_OK) {
+    if (($ret = qingstor_http_status($res)) != QS_REQUEST_OK) {
         return NULL;
     }
     return $bucket;
@@ -68,13 +132,13 @@ function qingstor_get_bucket()
 function qingstor_bucket_init()
 {
     if (empty($bucket = qingstor_get_bucket())) {
-        return;
+        return QS_CLIENT_ERROR;
     }
     $options = get_option('qingstor-options');
 
     $response = $bucket->getACL();
-    if (qingstor_http_status($response) != QS_OK) {
-        return;
+    if (($ret = qingstor_http_status($response)) != QS_REQUEST_OK) {
+        return $ret;
     }
     $userid = $response->owner['id'];
 
@@ -98,8 +162,8 @@ function qingstor_bucket_init()
             )
         )
     );
-    if (qingstor_http_status($res) != QS_OK) {
-        return;
+    if (($ret = qingstor_http_status($res)) != QS_REQUEST_OK) {
+        return $ret;
     }
 
     $res = $bucket->getPolicy();
@@ -122,6 +186,7 @@ function qingstor_bucket_init()
             ))
         )
     );
+    return QS_REQUEST_OK;
 }
 
 // Test input for <form>.

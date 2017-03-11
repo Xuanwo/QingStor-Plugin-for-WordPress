@@ -1,5 +1,11 @@
 <?php
 
+define('QS_ABSPATH_NOT_READABLE',    21);
+define('QS_WP_CONTENT_NOT_WRITABLE', 22);
+define('QS_NOZIP',                   23);
+define('QS_NOMYSQLDUMP',             24);
+define('QS_INVALID_RECURRENCE',      25);
+
 final class QingStorBackup
 {
     private static $instance;
@@ -21,11 +27,14 @@ final class QingStorBackup
 
     public function scheduled_backup($recurrence) {
         $this->clear_schedule();
+        if (($ret = $this->is_backup_possible()) != QS_REQUEST_OK) {
+            return $ret;
+        }
         if ($recurrence['schedule_type'] === 'manually') {
-            return;
+            return QS_REQUEST_OK;
         }
         if (! key_exists($recurrence['schedule_type'], wp_get_schedules())) {
-            return;
+            return QS_REQUEST_OK;
         }
 
         switch ($recurrence['schedule_type']) {
@@ -44,10 +53,11 @@ final class QingStorBackup
                 $time_str = 'now';
                 break;
             default:
-                return;
+                return QS_INVALID_RECURRENCE;
         }
         $timestamp = strtotime($time_str) - ($time_str === 'now' ? 0 : get_option('gmt_offset') * HOUR_IN_SECONDS);
         wp_schedule_event($timestamp, $recurrence['schedule_type'], 'qingstor_scheduled_backup_hook');
+        return QS_REQUEST_OK;
     }
 
     public function clear_schedule() {
@@ -57,7 +67,11 @@ final class QingStorBackup
 
     // Trigger after one second for "Backup Now"
     public function once_bakcup() {
+        if (($ret = $this->is_backup_possible()) != QS_REQUEST_OK) {
+            return $ret;
+        }
         wp_schedule_single_event(time() + 1, 'qingstor_once_backup_hook');
+        return $ret;
     }
 
 	/**
@@ -114,7 +128,7 @@ final class QingStorBackup
         }
         $options = get_option('qingstor-options');
         $res = $bucket->listObjects(array('prefix' => $options['backup_prefix']));
-        if (qingstor_http_status($res) == QS_OK) {
+        if (qingstor_http_status($res) == QS_REQUEST_OK) {
             $files = $res->{'keys'};
             $backups = array();
             foreach ($files as $f) {
@@ -127,6 +141,8 @@ final class QingStorBackup
                 $bucket->deleteObject(end($backups));
                 array_pop($backups);
             }
+        } else {
+            return QS_CLIENT_ERROR;
         }
     }
 
@@ -226,18 +242,18 @@ final class QingStorBackup
     function is_backup_possible()
     {
         if (! wp_is_writable(WP_CONTENT_DIR) || ! is_readable(WP_CONTENT_DIR)) {
-            return false;
+            return QS_WP_CONTENT_NOT_WRITABLE;
         }
         if (! is_readable(ABSPATH)) {
-            return false;
+            return QS_ABSPATH_NOT_READABLE;
         }
         if (! $this->zip_cmd_test()) {
-            return false;
+            return QS_NOZIP;
         }
         if (! $this->mysqldump_cmd_test()) {
-            return false;
+            return QS_NOMYSQLDUMP;
         }
-        return true;
+        return qingstor_bucket_test();
     }
 
     public function send_mail($filename) {

@@ -36,6 +36,11 @@ After setting:
 
 == Changelog ==
 
+= 0.3.3 =
+* Added error detection when saving settings
+* Fixed tab display error when switching
+* Make a little adjustment to the interface
+
 = 0.3.2 =
 * Used tabs for sections
 

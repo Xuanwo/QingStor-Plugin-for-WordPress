@@ -5,7 +5,7 @@ Plugin URI:  https://github.com/yungkcx/QingStor-Plugin-for-WordPress
 Description: QingStor Plugin for WordPress. The Backup function requires zip and mysqldump program.
 Text Domain: wp-qingstor
 Domain Path: languages/
-Version:     0.3.2
+Version:     0.3.3
 Author:      yungkcx
 Author URI:  http://yungkcx.github.io
 */

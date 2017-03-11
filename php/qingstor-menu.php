@@ -8,12 +8,13 @@ function qingstor_settings_menu()
 
 function qingstor_settings_page()
 {
+    $qingstor_error = QS_REQUEST_OK;
     $options = get_option('qingstor-options');
     if ($_REQUEST['once_backup']) {
-        QingStorBackup::get_instance()->once_bakcup();
+        $qingstor_error = QingStorBackup::get_instance()->once_bakcup();
     } elseif ($_REQUEST['upload_uploads']) {
         // Upload wp-content/uploads/ directory.
-        QingStorUpload::get_instance()->upload_uploads();
+        $qingstor_error = QingStorUpload::get_instance()->upload_uploads();
     } elseif ($_SERVER['REQUEST_METHOD'] == 'POST') {
         if (! empty($_POST['access_key'])) {
             $options['access_key'] = qingstor_test_key($_POST['access_key']);
@@ -24,8 +25,9 @@ function qingstor_settings_page()
         if (! empty($_POST['bucket_name'])) {
             $options['bucket_name'] = qingstor_test_bucket_name($_POST['bucket_name']);
             // Set policy of the Bucket.
+            update_option('qingstor-options', $options);
             if ($_POST['set_policy']) {
-                qingstor_bucket_init();
+                $qingstor_error = qingstor_bucket_init();
             }
         }
         if (! empty($_POST['upload_types'])) {
@@ -42,6 +44,7 @@ function qingstor_settings_page()
         }
         if ($_POST['replace_url']) {
             $options['replace_url'] = true;
+            $qingstor_error = QingStorUpload::get_instance()->get_bucket_url_code($options['bucket_url']);
         } else {
             $options['replace_url'] = false;
         }
@@ -62,9 +65,12 @@ function qingstor_settings_page()
             $options['mailaddr'] = qingstor_test_email($_POST['mailaddr']);
         }
         $options['schedule_recurrence'] = $_POST['schedule_recurrence'];
-        QingStorBackup::get_instance()->scheduled_backup($_POST['schedule_recurrence']);
+        update_option('qingstor-options', $options);
+        $qingstor_error_save = QingStorBackup::get_instance()->scheduled_backup($_POST['schedule_recurrence']);
+        if ($qingstor_error == QS_REQUEST_OK) {
+            $qingstor_error = $qingstor_error_save;
+        }
     }
-    update_option('qingstor-options', $options);
 
     $qingstor_upload_types  = $options['upload_types'];
     $qingstor_upload_prefix = $options['upload_prefix'];
